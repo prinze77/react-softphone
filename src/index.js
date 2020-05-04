@@ -14,6 +14,7 @@ import SettingsBlock from './phoneBlocks/SettingsBlock';
 import StatusBlock from './phoneBlocks/StatusBlock';
 import CallQueue from './phoneBlocks/CallQueue';
 import CallsFlowControl from './CallsFlowControl';
+import MuiAlert from "@material-ui/lab/Alert";
 
 
 const flowRoute = new CallsFlowControl();
@@ -192,7 +193,7 @@ export default function SoftPhone({
     setNotificationState((notification) => ({ ...notification, open: false }));
   };
   function Alert(props) {
-    return ;
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
   }
   flowRoute.activeChanel = localStatePhone.displayCalls[activeChannel];
   flowRoute.connectedPhone = localStatePhone.connectedPhone;
