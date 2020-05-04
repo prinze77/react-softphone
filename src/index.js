@@ -91,11 +91,9 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-export function useLeet( ) {
-  return 33
-}
-export function SoftPhone({
-  callVolume=20, ringVolume, setConnectOnStartToLocalStorage, connectOnStart, config
+
+export default function SoftPhone({
+  callVolume, ringVolume, setConnectOnStartToLocalStorage, connectOnStart=false, config
 }) {
   const defaultSoftPhoneState = {
     displayCalls: [
@@ -176,7 +174,6 @@ export function SoftPhone({
     ringVolume
   };
   const classes = useStyles();
-
 
   const [drawerOpen, drawerSetOpen] = useState(true);
   const [dialState, setdialState] = useState('');
@@ -573,15 +570,20 @@ export function SoftPhone({
     if (localStatePhone.phoneConnectOnStart) {
       handleConnectPhone(null, true);
     }
-    player.current.defaultMuted = false;
-    player.current.autoplay = true;
-    player.current.volume = parseInt(localStatePhone.callVolume, 10) / 100;
-    // player.volume = this.outputVolume;
-    flowRoute.player = player;
-    ringer.current.src = '/sound/ringing.mp3';
-    ringer.current.loop = true;
-    ringer.current.volume = parseInt(localStatePhone.ringVolume, 10) / 100;
-    flowRoute.ringer = ringer;
+
+    try {
+      player.current.defaultMuted = false;
+      player.current.autoplay = true;
+      player.current.volume = parseInt(localStatePhone.callVolume, 10) / 100;
+      // player.volume = this.outputVolume;
+      flowRoute.player = player;
+      ringer.current.src = '/sound/ringing.mp3';
+      ringer.current.loop = true;
+      ringer.current.volume = parseInt(localStatePhone.ringVolume, 10) / 100;
+      flowRoute.ringer = ringer;
+    }catch (e) {
+
+    }
   },
   []);
 
