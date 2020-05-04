@@ -1,6 +1,6 @@
 {
   "name": "react-softphone",
-  "version": "1.0.1-0",
+  "version": "1.0.1-1",
   "description": "Webrtc Softphone React",
   "main": "index.js",
   "scripts": {
