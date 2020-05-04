@@ -1,5 +1,5 @@
 import React from 'react';
-import { makeStyles, useTheme } from '@material-ui/styles';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 import SwipeableViews from 'react-swipeable-views';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
@@ -142,7 +142,7 @@ function SwipeCaruselBlock({
         </Tabs>
       </AppBar>
       <SwipeableViews
-        axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
+        axis={'x'}
         index={activeChannel}
         onChangeIndex={handleTabChangeIndex}
       >
@@ -154,7 +154,6 @@ function SwipeCaruselBlock({
             style={displayCall.hold ? { backgroundColor: '#ff7c7c' } : { backgroundColor: '#e0e3ff' }}
             value={key}
             index={displayCall.id}
-            dir={theme.direction}
           >
             {() => {
               if (displayCall.inCall === true) {
