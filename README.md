@@ -52,7 +52,7 @@ export default App;
 
 ```
 
-![Image description](https://i.ibb.co/HXNwZp8/2020-05-04-21-28-44.png)
+![Image description](https://ibb.co/m9StX89)
 
 
 ## License
