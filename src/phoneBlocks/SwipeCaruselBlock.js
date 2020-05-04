@@ -38,7 +38,6 @@ const useStyles = makeStyles((theme) => ({
     textTransform: 'none',
     minWidth: '25%',
     marginRight: 'auto',
-    fontWeight: theme.typography.fontWeightRegular,
     // marginRight: theme.spacing(4),
     fontFamily: [
       '-apple-system',

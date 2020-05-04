@@ -192,24 +192,30 @@ function CallsFlowControl() {
   };
 
   this.init = () => {
-    this.phone = new UA(this.config);
-    this.phone.on('newRTCSession', this.handleNewRTCSession.bind(this));
-    const binds = [
-      'connected',
-      'disconnected',
-      'registered',
-      'unregistered',
-      'registrationFailed',
-      'invite',
-      'message',
-      'connecting'
-    ];
-    _.forEach(binds, (value) => {
-      this.phone.on(value, (e) => {
-        this.engineEvent(value, e);
+    try {
+      this.phone = new UA(this.config);
+      this.phone.on('newRTCSession', this.handleNewRTCSession.bind(this));
+      const binds = [
+        'connected',
+        'disconnected',
+        'registered',
+        'unregistered',
+        'registrationFailed',
+        'invite',
+        'message',
+        'connecting'
+      ];
+      _.forEach(binds, (value) => {
+        this.phone.on(value, (e) => {
+          this.engineEvent(value, e);
+        });
       });
-    });
-    this.initiated = true;
+      this.initiated = true;
+    }
+    catch (e) {
+      console.log(e)
+    }
+
   };
 
   this.call = (to) => {
