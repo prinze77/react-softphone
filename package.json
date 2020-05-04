@@ -1,0 +1,36 @@
+{
+  "name": "react-softphone",
+  "version": "1.0.0",
+  "description": "Webrtc Softphone React",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"No test specified\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/prinze77/react-softphone.git"
+  },
+  "keywords": [
+    "Reqact",
+    "Webrtc",
+    "Softphone"
+  ],
+  "author": "Dionis",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/prinze77/react-softphone/issues"
+  },
+  "homepage": "https://github.com/prinze77/react-softphone#readme",
+  "dependencies": {
+    "@material-ui/core": "^4.9.13",
+    "@material-ui/icons": "^4.9.1",
+    "@material-ui/lab": "^4.0.0-alpha.52",
+    "@material-ui/styles": "^4.9.13",
+    "jssip": "^3.4.3",
+    "lodash": "^4.17.15",
+    "prop-types": "^15.7.2",
+    "react": "^16.13.1",
+    "react-helmet": "^6.0.0",
+    "react-swipeable-views": "^0.13.9"
+  }
+}
