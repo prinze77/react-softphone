@@ -14,7 +14,7 @@ npm install --save react-softphone
 
 ```jsx
 import React from 'react'
-import { SoftPhone } from 'react-softphone'
+import  SoftPhone  from 'react-softphone'
 import { WebSocketInterface } from 'jssip';
 
   const config = {
