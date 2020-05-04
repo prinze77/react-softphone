@@ -1,6 +1,6 @@
 {
   "name": "react-softphone",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Webrtc Softphone React",
   "main": "dist/index.js",
   "module": "dist/index.es.js",
@@ -9,7 +9,10 @@
     "node": ">=8",
     "npm": ">=5"
   },
-  "files": ["dist","src"],
+  "files": [
+    "dist",
+    "src"
+  ],
   "scripts": {
     "build": "rollup -c"
   },
@@ -27,7 +30,6 @@
   "bugs": {
     "url": "https://github.com/prinze77/react-softphone/issues"
   },
-
   "homepage": "https://github.com/prinze77/react-softphone#readme",
   "peerDependencies": {
     "react": "^16.13.1",
