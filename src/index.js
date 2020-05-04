@@ -175,7 +175,7 @@ export default function SoftPhone({
   };
   const classes = useStyles();
 
-  const [drawerOpen, drawerSetOpen] = useState(true);
+  const [drawerOpen, drawerSetOpen] = useState(false);
   const [dialState, setdialState] = useState('');
   const [activeChannel, setActiveChannel] = useState(0);
   const [localStatePhone, setLocalStatePhone] = useState(defaultSoftPhoneState);

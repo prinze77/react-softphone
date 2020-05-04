@@ -1,4 +1,4 @@
-# React Softphone
+# React SoftPhone
 
 >
 
@@ -28,10 +28,7 @@ import { WebSocketInterface } from 'jssip';
 
   };
 const setConnectOnStartToLocalStorage =(newValue)=>{
-
-
-//Save newValue of connect on start to local storage
-
+// Handle save the auto connect value to local storage
 return true
 }
 
@@ -55,9 +52,12 @@ export default App;
 
 ```
 
+![Image description](https://i.ibb.co/HXNwZp8/2020-05-04-21-28-44.png)
+
+
 ## License
 
-MIT © [dionis](https://github.com/dionis)
+MIT © [prinze77](https://github.com/prinze77)
 
 ---
 
