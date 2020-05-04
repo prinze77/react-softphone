@@ -2,9 +2,9 @@
   "name": "react-softphone",
   "version": "1.0.1-10",
   "description": "Webrtc Softphone React",
-  "main": "src/index.js",
-  "module": "src/index.js",
-  "jsnext:main": "src/index.js",
+  "main": "dist/index.js",
+  "module": "dist/index.es.js",
+  "jsnext:main": "dist/index.es.js",
   "engines": {
     "node": ">=8",
     "npm": ">=5"
