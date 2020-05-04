@@ -91,7 +91,9 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-
+export function useLeet( ) {
+  return 33
+}
 export function SoftPhone({
   callVolume=20, ringVolume, setConnectOnStartToLocalStorage, connectOnStart, config
 }) {
