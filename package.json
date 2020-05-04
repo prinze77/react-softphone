@@ -9,6 +9,7 @@
     "node": ">=8",
     "npm": ">=5"
   },
+  "files": ["dist","src"],
   "scripts": {
     "build": "rollup -c"
   },
@@ -26,6 +27,7 @@
   "bugs": {
     "url": "https://github.com/prinze77/react-softphone/issues"
   },
+
   "homepage": "https://github.com/prinze77/react-softphone#readme",
   "peerDependencies": {
     "react": "^16.13.1",
