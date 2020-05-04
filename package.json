@@ -3,8 +3,8 @@
   "version": "1.0.1-8",
   "description": "Webrtc Softphone React",
   "main": "src/index.js",
-  "module": "src/index.es.js",
-  "jsnext:main": "src/index.es.js",
+  "module": "src/index.js",
+  "jsnext:main": "src/index.js",
   "engines": {
     "node": ">=8",
     "npm": ">=5"
