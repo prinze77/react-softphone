@@ -178,7 +178,7 @@ function SoftPhone({
 
 
   const [drawerOpen, drawerSetOpen] = useState(true);
-  const [dialState, setdialState] = useState('101');
+  const [dialState, setdialState] = useState('');
   const [activeChannel, setActiveChannel] = useState(0);
   const [localStatePhone, setLocalStatePhone] = useState(defaultSoftPhoneState);
   const [notificationState, setNotificationState] = React.useState({ open: false, message: '' });
