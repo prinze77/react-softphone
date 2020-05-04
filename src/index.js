@@ -7,7 +7,6 @@ import {
 } from '@material-ui/core';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import MuiAlert from '@material-ui/lab/Alert';
 import _ from 'lodash';
 import KeypadBlock from './phoneBlocks/KeypadBlock';
 import SwipeCaruselBlock from './phoneBlocks/SwipeCaruselBlock';
@@ -93,8 +92,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-function SoftPhone({
-  callVolume, ringVolume, setConnectOnStartToLocalStorage, connectOnStart, config
+export function SoftPhone({
+  callVolume=20, ringVolume, setConnectOnStartToLocalStorage, connectOnStart, config
 }) {
   const defaultSoftPhoneState = {
     displayCalls: [
@@ -194,7 +193,7 @@ function SoftPhone({
     setNotificationState((notification) => ({ ...notification, open: false }));
   };
   function Alert(props) {
-    return <MuiAlert elevation={6} variant="filled" {...props} />;
+    return ;
   }
   flowRoute.activeChanel = localStatePhone.displayCalls[activeChannel];
   flowRoute.connectedPhone = localStatePhone.connectedPhone;
@@ -700,4 +699,3 @@ function SoftPhone({
   );
 }
 
-export default SoftPhone;
