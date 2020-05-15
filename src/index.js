@@ -281,7 +281,7 @@ export default function SoftPhone({
           ...prevState,
           displayCalls: newProgressLocalStatePhone.displayCalls
         }))
-
+        setdialState('')
         break
       case 'callEnded':
         // Call is ended, lets delete the call from calling queue
