@@ -42,6 +42,7 @@ function App() {
                      connectOnStart={false} //Auto connect to sip
                      config={config} //Voip config
                      setConnectOnStartToLocalStorage={setConnectOnStartToLocalStorage} // Callback function
+                     timelocale={'UTC+3'} //Set time local for call history
                    />
       </header>
     </div>
