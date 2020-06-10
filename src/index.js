@@ -313,21 +313,21 @@ export default function SoftPhone({
         const firstCheck = localStatePhone.phoneCalls.filter((item) => item.sessionId === payload && item.direction === 'incoming')
         const secondCheck = localStatePhone.displayCalls.filter((item) => item.sessionId === payload)
         if (firstCheck.length === 1) {
-          setCalls((call) => [...call, {
+          setCalls((call) => [ {
             status: 'missed',
             sessionId: firstCheck[0].sessionId,
             direction: firstCheck[0].direction,
             number: firstCheck[0].callNumber,
             time: new Date()
-          }])
+          }, ...call])
         } else if (secondCheck.length === 1) {
-          setCalls((call) => [...call, {
+          setCalls((call) => [ {
             status: secondCheck[0].inAnswer ? 'answered' : 'missed',
             sessionId: secondCheck[0].sessionId,
             direction: secondCheck[0].direction,
             number: secondCheck[0].callNumber,
             time: new Date()
-          }])
+          }, ...call])
         }
         break
       case 'callAccepted':
