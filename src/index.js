@@ -1,6 +1,5 @@
 import React, { createRef, useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import Page from './phoneBlocks/Page'
 import CallIcon from '@material-ui/icons/Call'
 import {
   Divider, Drawer, IconButton, TextField, Snackbar
@@ -8,13 +7,14 @@ import {
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
 import ChevronRightIcon from '@material-ui/icons/ChevronRight'
 import _ from 'lodash'
+import MuiAlert from '@material-ui/lab/Alert'
+import Page from './phoneBlocks/Page'
 import KeypadBlock from './phoneBlocks/KeypadBlock'
 import SwipeCaruselBlock from './phoneBlocks/SwipeCaruselBlock'
-import SettingsBlock from './phoneBlocks/SettingsBlock'
+import SwipeCaruselBodyBlock from './phoneBlocks/SwipeCaruselBodyBlock'
 import StatusBlock from './phoneBlocks/StatusBlock'
 import CallQueue from './phoneBlocks/CallQueue'
 import CallsFlowControl from './CallsFlowControl'
-import MuiAlert from '@material-ui/lab/Alert'
 
 const flowRoute = new CallsFlowControl()
 
@@ -91,7 +91,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 export default function SoftPhone({
-  callVolume, ringVolume, setConnectOnStartToLocalStorage, connectOnStart = false, config
+  callVolume, ringVolume, setConnectOnStartToLocalStorage, connectOnStart = false, config, timelocale = 'UTC'
 }) {
   const defaultSoftPhoneState = {
     displayCalls: [
@@ -178,6 +178,7 @@ export default function SoftPhone({
   const [activeChannel, setActiveChannel] = useState(0)
   const [localStatePhone, setLocalStatePhone] = useState(defaultSoftPhoneState)
   const [notificationState, setNotificationState] = React.useState({ open: false, message: '' })
+  const [calls, setCalls] = React.useState([])
   const notify = (message) => {
     setNotificationState((notification) => ({ ...notification, open: true, message }))
   }
@@ -251,7 +252,7 @@ export default function SoftPhone({
           phoneCalls: [
             ...prevState.phoneCalls,
             {
-              callNumber: (payload.remote_identity.display_name !== '') ? `${payload.remote_identity.display_name || ''}__${payload.remote_identity.uri.user}__` : payload.remote_identity.uri.user,
+              callNumber: (payload.remote_identity.display_name !== '') ? `${payload.remote_identity.display_name || ''}` : payload.remote_identity.uri.user,
               sessionId: payload.id,
               ring: false,
               duration: 0,
@@ -259,6 +260,7 @@ export default function SoftPhone({
             }
           ]
         }))
+
         break
       case 'outgoingCall':
         // looks like new call its outgoing call
@@ -282,6 +284,7 @@ export default function SoftPhone({
           displayCalls: newProgressLocalStatePhone.displayCalls
         }))
         setdialState('')
+
         break
       case 'callEnded':
         // Call is ended, lets delete the call from calling queue
@@ -306,6 +309,26 @@ export default function SoftPhone({
 
           } : a))
         }))
+
+        const firstCheck = localStatePhone.phoneCalls.filter((item) => item.sessionId === payload && item.direction === 'incoming')
+        const secondCheck = localStatePhone.displayCalls.filter((item) => item.sessionId === payload)
+        if (firstCheck.length === 1) {
+          setCalls((call) => [...call, {
+            status: 'missed',
+            sessionId: firstCheck[0].sessionId,
+            direction: firstCheck[0].direction,
+            number: firstCheck[0].callNumber,
+            time: new Date()
+          }])
+        } else if (secondCheck.length === 1) {
+          setCalls((call) => [...call, {
+            status: secondCheck[0].inAnswer ? 'answered' : 'missed',
+            sessionId: secondCheck[0].sessionId,
+            direction: secondCheck[0].direction,
+            number: secondCheck[0].callNumber,
+            time: new Date()
+          }])
+        }
         break
       case 'callAccepted':
         // Established conection
@@ -452,7 +475,9 @@ export default function SoftPhone({
   }
   const handleCall = (event) => {
     event.persist()
-    dialState.match(/^[0-9]+$/) != null ? flowRoute.call(dialState) : null
+    if (dialState.match(/^[0-9]+$/) != null) {
+      flowRoute.call(dialState)
+    }
   }
   const handleEndCall = (event) => {
     event.persist()
@@ -665,12 +690,14 @@ export default function SoftPhone({
 
         <Divider />
 
-        {/* Settings Block */}
-        <SettingsBlock
+        {/* Swipe Carusel */}
+        <SwipeCaruselBodyBlock
           localStatePhone={localStatePhone}
           handleConnectPhone={handleConnectPhone}
           handleSettingsSlider={handleSettingsSlider}
           handleConnectOnStart={handleConnectOnStart}
+          calls={calls}
+          timelocale={timelocale}
         />
 
         <Divider />

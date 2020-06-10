@@ -41,7 +41,9 @@
     "@material-ui/pickers": "^3.2.10",
     "react-helmet": "^5.2.1",
     "react-swipeable-views": "^0.13.9",
-    "clsx": "^1.1.0"
+    "clsx": "^1.1.0",
+    "luxon": "^1.24.1",
+    "lodash": "^4.17.15"
   },
   "dependencies": {
     "react": "^16.13.1",
@@ -53,7 +55,9 @@
     "@material-ui/pickers": "^3.2.10",
     "react-helmet": "^5.2.1",
     "react-swipeable-views": "^0.13.9",
-    "clsx": "^1.1.0"
+    "clsx": "^1.1.0",
+    "luxon": "^1.24.1",
+    "lodash": "^4.17.15"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",
