@@ -31,6 +31,18 @@ const setConnectOnStartToLocalStorage =(newValue)=>{
 // Handle save the auto connect value to local storage
 return true
 }
+const setNotifications =(newValue)=>{
+// Handle save the Show notifications of an incoming call to local storage
+return true
+}
+const setCallVolume =(newValue)=>{
+// Handle save the call Volume value to local storage
+return true
+}
+const setRingVolume =(newValue)=>{
+// Handle save the Ring Volume value to local storage
+return true
+}
 
 function App() {
   return (
@@ -40,8 +52,12 @@ function App() {
                      callVolume={33} //Set Default callVolume
                      ringVolume={44} //Set Default ringVolume
                      connectOnStart={false} //Auto connect to sip
+                     notifications={false} //Show Browser Notification of an incoming call
                      config={config} //Voip config
                      setConnectOnStartToLocalStorage={setConnectOnStartToLocalStorage} // Callback function
+                     setNotifications={setNotifications} // Callback function
+                     setCallVolume={setCallVolume} // Callback function
+                     setRingVolume={setRingVolume} // Callback function
                      timelocale={'UTC+3'} //Set time local for call history
                    />
       </header>
