@@ -21,6 +21,7 @@ import {
 } from '@material-ui/icons';
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import PropTypes from 'prop-types';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -64,7 +65,6 @@ const useStyles = makeStyles((theme) => ({
 function KeypadBlock({
   handleCallAttendedTransfer,
   handleCallTransfer,
-  handleSettingsButton,
   handlePressKey,
   handleMicMute,
   handleCall,
@@ -77,7 +77,6 @@ function KeypadBlock({
   const {
     inCall,
     muted,
-    autoMute,
     hold,
     sessionId,
     inAnswer,
@@ -430,5 +429,16 @@ function KeypadBlock({
     </div>
   );
 }
+KeypadBlock.propTypes = {
+  handleCallAttendedTransfer: PropTypes.any,
+  handleCallTransfer: PropTypes.any,
+  handlePressKey: PropTypes.any,
+  handleMicMute: PropTypes.any,
+  handleCall: PropTypes.any,
+  handleEndCall: PropTypes.any,
+  activeChanel: PropTypes.any,
+  keyVariant: PropTypes.any,
+  handleHold: PropTypes.any
 
+};
 export default KeypadBlock;

@@ -47,18 +47,19 @@
     "lodash": "^4.17.15"
   },
   "dependencies": {
-    "react": "^16.13.1",
-    "jssip": "3.3.6",
-    "react-dom": "^16.13.1",
     "@material-ui/core": "^4.9.9",
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.48",
     "@material-ui/pickers": "^3.2.10",
+    "clsx": "^1.1.0",
+    "jssip": "3.3.6",
+    "lodash": "^4.17.15",
+    "luxon": "^1.24.1",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
     "react-helmet": "^5.2.1",
     "react-swipeable-views": "^0.13.9",
-    "clsx": "^1.1.0",
-    "luxon": "^1.24.1",
-    "lodash": "^4.17.15"
+    "styled-components": "^5.1.1"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",

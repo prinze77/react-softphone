@@ -1,11 +1,21 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {
-  VolumeUp, VolumeOff, NotificationsActive, NotificationsOff
+  VolumeUp,
+  VolumeOff,
+  NotificationsActive,
+  NotificationsOff
 } from '@material-ui/icons';
 import {
-  Grid, FormControl, FormGroup, FormControlLabel, Slider, Switch, CircularProgress
+  Grid,
+  FormControl,
+  FormGroup,
+  FormControlLabel,
+  Slider,
+  Switch,
+  CircularProgress
 } from '@material-ui/core';
+import PropTypes from 'prop-types';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -21,14 +31,30 @@ const useStyles = makeStyles(() => ({
 function SettingsBlock({
   localStatePhone,
   handleConnectPhone,
-  handleSettingsSlider,
-  handleConnectOnStart
+  handleConnectOnStart,
+  handleNotifications,
+  handleSettingsSlider
 }) {
   const classes = useStyles();
 
   const {
-    callVolume, ringVolume, connectedPhone, connectingPhone, phoneConnectOnStart
+    connectedPhone, connectingPhone, phoneConnectOnStart, notifications, ringVolume, callVolume
   } = localStatePhone;
+
+  const [sliderValue, setSliderValue] = React.useState({
+    ringVolume,
+    callVolume
+  });
+
+
+  const handleSettingsSliderState = (name) => (e, newValue) => {
+    setSliderValue((prevState) => ({
+      ...prevState,
+      [name]: newValue
+    }));
+
+    handleSettingsSlider(name, newValue);
+  };
 
   return (
 
@@ -39,22 +65,32 @@ function SettingsBlock({
         spacing={2}
       >
         <Grid item xs={3}>
-          {ringVolume === 0 ? <NotificationsOff className={classes.sliderIcons} /> : <NotificationsActive className={classes.sliderIcons} />}
+          {sliderValue.ringVolume === 0
+            ? <NotificationsOff className={classes.sliderIcons} />
+            : <NotificationsActive className={classes.sliderIcons} />}
         </Grid>
         <Grid item xs={9}>
-          <Slider value={ringVolume} onChange={handleSettingsSlider('ringVolume')} aria-labelledby="continuous-slider" />
+          <Slider value={sliderValue.ringVolume} onChange={handleSettingsSliderState('ringVolume')} aria-labelledby="continuous-slider" />
         </Grid>
 
         <Grid item xs={3}>
-          {callVolume === 0 ? <VolumeOff className={classes.sliderIcons} /> : <VolumeUp className={classes.sliderIcons} />}
+          {sliderValue.callVolume === 0
+            ? <VolumeOff className={classes.sliderIcons} />
+            : <VolumeUp className={classes.sliderIcons} />}
         </Grid>
         <Grid item xs={9}>
-          <Slider value={callVolume} onChange={handleSettingsSlider('callVolume')} aria-labelledby="continuous-slider" />
+          <Slider value={sliderValue.callVolume} onChange={handleSettingsSliderState('callVolume')} aria-labelledby="continuous-slider" />
         </Grid>
 
 
         <FormControl component="fieldset" className={classes.sliderIcons}>
           <FormGroup aria-label="position" row>
+            <FormControlLabel
+              value="top"
+              control={<Switch checked={notifications} color="primary" onChange={handleNotifications} />}
+              label="Notifications"
+              labelPlacement="start"
+            />
             <FormControlLabel
               value="top"
               control={<Switch checked={phoneConnectOnStart} color="primary" onChange={handleConnectOnStart} />}
@@ -80,6 +116,13 @@ function SettingsBlock({
 
   );
 }
+SettingsBlock.propTypes = {
+  localStatePhone: PropTypes.any,
+  handleConnectPhone: PropTypes.any,
+  handleConnectOnStart: PropTypes.any,
+  handleSettingsSlider: PropTypes.any,
+  handleNotifications: PropTypes.any
 
+};
 
 export default SettingsBlock;
