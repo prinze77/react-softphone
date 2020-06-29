@@ -272,8 +272,7 @@ function SoftPhone({
             }
           ]
         }));
-
-        if (document.visibilityState !== 'visible') {
+        if (document.visibilityState !== 'visible' && localStatePhone.notifications) {
           const notification = new Notification('Incoming Call', {
             icon: 'https://voip.robofx.com/static/images/call-icon-telefono.png',
             body: `Caller: ${(payload.remote_identity.display_name !== '') ? `${payload.remote_identity.display_name || ''}` : payload.remote_identity.uri.user}`,
