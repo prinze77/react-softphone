@@ -643,8 +643,7 @@ function SoftPhone({
 
     }
   },
-  [config, localStatePhone.callVolume, localStatePhone.ringVolume, localStatePhone.phoneConnectOnStart]);
-
+  []);
   return (
     <Page
       className={classes.root}
