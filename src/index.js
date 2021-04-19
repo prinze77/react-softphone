@@ -29,7 +29,6 @@ import CallQueue from './phoneBlocks/CallQueue';
 import CallsFlowControl from './CallsFlowControl';
 
 const flowRoute = new CallsFlowControl();
-
 const player = createRef();
 const ringer = createRef();
 
@@ -42,7 +41,6 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(3)
   },
   phone: {
-    maxWidth: '256px',
     padding: '27px'
   },
   gridSettings: {
@@ -103,7 +101,17 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function SoftPhone({
-  callVolume, ringVolume, setConnectOnStartToLocalStorage, setNotifications, setCallVolume, setRingVolume, notifications = true, connectOnStart = true, config, timelocale = 'UTC'
+  callVolume,
+  ringVolume,
+  setConnectOnStartToLocalStorage,
+  setNotifications,
+  setCallVolume,
+  setRingVolume,
+  notifications = true,
+  connectOnStart = true,
+  config,
+  timelocale = 'UTC',
+  asteriskAccounts
 }) {
   const defaultSoftPhoneState = {
     displayCalls: [
@@ -275,7 +283,7 @@ function SoftPhone({
         if (document.visibilityState !== 'visible' && localStatePhone.notifications) {
           const notification = new Notification('Incoming Call', {
             icon: 'https://voip.robofx.com/static/images/call-icon-telefono.png',
-            body: `Caller: ${(payload.remote_identity.display_name !== '') ? `${payload.remote_identity.display_name || ''}` : payload.remote_identity.uri.user}`,
+            body: `Caller: ${(payload.remote_identity.display_name !== '') ? `${payload.remote_identity.display_name || ''}` : payload.remote_identity.uri.user}`
           });
           notification.onclick = function () {
             window.parent.focus();
@@ -283,7 +291,6 @@ function SoftPhone({
             this.close();
           };
         }
-
 
         break;
       case 'outgoingCall':
@@ -535,7 +542,10 @@ function SoftPhone({
   const handleMicMute = () => {
     flowRoute.setMicMuted();
   };
-  const handleCallTransfer = () => {
+
+  const handleCallTransfer = (transferedNumber) => {
+    if (!dialState && !transferedNumber) return;
+    if (transferedNumber) setdialState(transferedNumber);
     const newCallTransferDisplayCalls = _.map(
       localStatePhone.displayCalls, (a) => (a.id === activeChannel ? {
         ...a,
@@ -552,6 +562,7 @@ function SoftPhone({
       displayCalls: newCallTransferDisplayCalls
     }));
     flowRoute.activeCall.sendDTMF(`##${dialState}`);
+    setdialState('');
   };
 
   const handleCallAttendedTransfer = (event) => {
@@ -642,7 +653,8 @@ function SoftPhone({
 
     }
   },
-  []);
+  [config, localStatePhone.callVolume, localStatePhone.phoneConnectOnStart, localStatePhone.ringVolume]);
+
   return (
     <Page
       className={classes.root}
@@ -692,7 +704,6 @@ function SoftPhone({
           handleAnswer={handleAnswer}
           handleReject={handleReject}
         />
-
         {/* Swipe Carusel */}
         <SwipeCaruselBlock
           setLocalStatePhone={setLocalStatePhone}
@@ -725,7 +736,7 @@ function SoftPhone({
             handlePressKey={handlePressKey}
             activeChanel={localStatePhone.displayCalls[activeChannel]}
             handleSettingsButton={handleSettingsButton}
-
+            asteriskAccounts={asteriskAccounts}
           />
         </div>
 
@@ -750,6 +761,7 @@ function SoftPhone({
           connectedPhone={localStatePhone.connectedPhone}
           connectingPhone={localStatePhone.connectingPhone}
         />
+        <Divider />
       </Drawer>
 
       <div hidden>
@@ -762,7 +774,6 @@ function SoftPhone({
   );
 }
 
-
 SoftPhone.propTypes = {
   callVolume: PropTypes.any,
   ringVolume: PropTypes.any,
@@ -773,9 +784,8 @@ SoftPhone.propTypes = {
   notifications: PropTypes.any,
   connectOnStart: PropTypes.any,
   config: PropTypes.any,
-  timelocale: PropTypes.any
-
-
+  timelocale: PropTypes.any,
+  asteriskAccounts: PropTypes.any,
 };
 
 export default SoftPhone;

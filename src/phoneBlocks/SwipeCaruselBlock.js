@@ -8,8 +8,6 @@ import {
   Tabs,
   Tab,
   makeStyles,
-
-
 } from '@material-ui/core';
 import PropTypes from 'prop-types';
 
@@ -39,45 +37,44 @@ function a11yProps(index) {
   };
 }
 
-const useStyles = makeStyles(() => {
-  return {
-    tabs: {
-      textTransform: 'none',
-      minWidth: '25%',
-      marginRight: 'auto',
-      // marginRight: theme.spacing(4),
-      fontFamily: [
-        '-apple-system',
-        'BlinkMacSystemFont',
-        '"Segoe UI"',
-        'Roboto',
-        '"Helvetica Neue"',
-        'Arial',
-        'sans-serif',
-        '"Apple Color Emoji"',
-        '"Segoe UI Emoji"',
-        '"Segoe UI Symbol"'
-      ].join(','),
-      '&:hover': {
-        color: '#40a9ff',
-        opacity: 1
-      },
-      '&:focus': {
-        color: '#40a9ff'
-      }
+const useStyles = makeStyles((theme) => ({
+  tabs: {
+    textTransform: 'none',
+    minWidth: '25%',
+    marginRight: 'auto',
+    // marginRight: theme.spacing(4),
+    fontFamily: [
+      '-apple-system',
+      'BlinkMacSystemFont',
+      '"Segoe UI"',
+      'Roboto',
+      '"Helvetica Neue"',
+      'Arial',
+      'sans-serif',
+      '"Apple Color Emoji"',
+      '"Segoe UI Emoji"',
+      '"Segoe UI Symbol"'
+    ].join(','),
+    '&:hover': {
+      color: '#3949ab',
+      opacity: 1
     },
-    tabPanelHold: {
-      backgroundColor: '#ff8686',
-    },
-    tabPanelActive: {
-      backgroundColor: '#8bff87',
-    },
-    text: {
-      color: 'black',
+    '&:focus': {
+      color: '#3949ab'
     }
+  },
+  tabPanelHold: {
+    backgroundColor: '#ff8686',
+  },
+  tabPanelActive: {
+    padding: `${theme.spacing(1)}px ${theme.spacing(3)}px`,
+    backgroundColor: '#d0f6bb',
+  },
+  text: {
+    color: 'black',
+  }
 
-  };
-});
+}));
 
 function SwipeCaruselBlock({
   localStatePhone, activeChannel, setActiveChannel
@@ -116,7 +113,6 @@ function SwipeCaruselBlock({
   const handleTabChange = (event, newValue) => {
     setActiveChannel(newValue);
   };
-
 
   displayCalls.map((displayCall, key) => {
     // if Call just started then increment duration every one second
@@ -304,7 +300,6 @@ function SwipeCaruselBlock({
           </TabPanel>
         ))}
 
-
       </SwipeableViews>
     </div>
   );
@@ -314,7 +309,6 @@ SwipeCaruselBlock.propTypes = {
   localStatePhone: PropTypes.any,
   activeChannel: PropTypes.any,
   setActiveChannel: PropTypes.any
-
 
 };
 export default SwipeCaruselBlock;

@@ -1,9 +1,18 @@
+import React, { useState, useEffect } from 'react';
 import {
   Grid,
   Fab,
   FormControlLabel,
   Switch,
-  Tooltip
+  Tooltip,
+  Popover,
+  List,
+  ListItem,
+  ListItemText,
+  Divider,
+  Paper,
+  InputBase,
+  IconButton
 } from '@material-ui/core';
 import {
   Mic,
@@ -17,11 +26,13 @@ import {
   PhoneForwarded,
   Cancel,
   SwapCalls,
-  CallMerge
+  CallMerge,
+  Search,
 } from '@material-ui/icons';
-import React from 'react';
+
 import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
+import OnlineIndicator from '../../../../components/OnlineIndicator';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -59,7 +70,30 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: '12px',
     display: 'flex',
     justifyContent: 'center'
-  }
+  },
+  list: {
+    width: '100%',
+    maxWidth: 360,
+    backgroundColor: theme.palette.background.paper,
+  },
+  flexBetween: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  },
+  status: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    margin: '0 0 0 10px',
+  },
+  input: {
+    marginLeft: theme.spacing(1),
+    flex: 1,
+  },
+  iconButton: {
+    padding: '0 10px',
+  },
 }));
 
 function KeypadBlock({
@@ -71,7 +105,9 @@ function KeypadBlock({
   handleEndCall,
   activeChanel,
   keyVariant = 'default',
-  handleHold
+  handleHold,
+  asteriskAccounts,
+  transferListAccountsOpen
 }) {
   const classes = useStyles();
   const {
@@ -87,7 +123,23 @@ function KeypadBlock({
     inTransfer,
     transferControl
   } = activeChanel;
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [accounts, setAccounts] = useState(asteriskAccounts);
+  const [inputSearch, setInputSearch] = useState('');
+  const open = Boolean(anchorEl);
+  const id = transferListAccountsOpen ? 'simple-popover' : undefined;
+  const handleClickTransferCall = (event) => {
+    setAnchorEl(event.currentTarget);
+    handleCallTransfer();
+  };
+  useEffect(() => {
+    const searchedAccounts = asteriskAccounts.filter((acc) => acc.label.toLowerCase().includes(inputSearch.toLowerCase()) || acc.accountId.includes(inputSearch));
+    setAccounts(searchedAccounts);
+  }, [asteriskAccounts, inputSearch]);
 
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
   return (
     <div>
       {keyVariant === 'default' ? (
@@ -95,7 +147,10 @@ function KeypadBlock({
           <Grid container spacing={0} className={classes.gridRaw}>
             <Grid item xs={3}>
               <Grid item xs={12}>
-                <Tooltip title="Mute mic" aria-label="add">
+                <Tooltip
+                  title={muted ? 'Unmute mic' : 'Mute mic'}
+                  aria-label="add"
+                >
                   <div>
                     <Fab
                       disabled={!inCall}
@@ -137,19 +192,66 @@ function KeypadBlock({
             </Grid>
             <Grid item xs={3}>
               <Tooltip title="Transfer Call" aria-label="add">
-                <span>
+                <div>
                   <Fab
-                    disabled={
-                      !inCall || !inAnswer || hold || !allowAttendedTransfer
-                    }
+                    disabled={!inCall || !inAnswer || hold || !allowAttendedTransfer}
                     className={classes.fab}
                     size="small"
                     aria-label="4"
-                    onClick={handleCallTransfer}
+                    onClick={handleClickTransferCall}
+                    aria-describedby={id}
                   >
                     <PhoneForwarded />
                   </Fab>
-                </span>
+                  <Popover
+                    id={id}
+                    open={open}
+                    onClose={handleClose}
+                    anchorEl={anchorEl}
+                    anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+                    transformOrigin={{ vertical: 'top', horizontal: 'center' }}
+                  >
+                    <List component="nav" className={classes.list} aria-label="accounts">
+                      <ListItem>
+                        <ListItemText primary={(
+                          <Paper style={{ padding: '5px' }}>
+                            <InputBase
+                              className={classes.input}
+                              placeholder="Search"
+                              inputProps={{ 'aria-label': 'search' }}
+                              onChange={(event) => setInputSearch(event.target.value)}
+                              defaultValue={inputSearch}
+                            />
+                            <IconButton type="submit" className={classes.iconButton} aria-label="search">
+                              <Search />
+                            </IconButton>
+                          </Paper>
+                        )}
+                        />
+                      </ListItem>
+                      <Divider />
+                      {accounts.map((account, key) => (
+                        <ListItem button key={key} onClick={() => handleCallTransfer(account.accountId)}>
+                          <ListItemText primary={(
+                            <span className={classes.flexBetween}>
+                              {account.label}
+                              {' '}
+                              {account.accountId}
+                              {' '}
+                              <div className={classes.status}>
+                                <OnlineIndicator
+                                  size="small"
+                                  status={account.online === 'true' ? 'online' : 'busy'}
+                                />
+                              </div>
+                            </span>
+                          )}
+                          />
+                        </ListItem>
+                      ))}
+                    </List>
+                  </Popover>
+                </div>
               </Tooltip>
             </Grid>
             <Grid item xs={3}>
@@ -438,7 +540,8 @@ KeypadBlock.propTypes = {
   handleEndCall: PropTypes.any,
   activeChanel: PropTypes.any,
   keyVariant: PropTypes.any,
-  handleHold: PropTypes.any
-
+  handleHold: PropTypes.any,
+  asteriskAccounts: PropTypes.any,
+  transferListAccountsOpen: PropTypes.any
 };
 export default KeypadBlock;

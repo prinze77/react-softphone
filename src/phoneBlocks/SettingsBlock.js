@@ -13,19 +13,35 @@ import {
   FormControlLabel,
   Slider,
   Switch,
-  CircularProgress
+  LinearProgress
 } from '@material-ui/core';
 import PropTypes from 'prop-types';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   root: {
-    maxWidth: '256px',
-    padding: '27px'
+    padding: theme.spacing(0),
   },
   sliderIcons: {
     marginRight: '10px', color: '#546e7a'
+  },
+  tab: {
+    '& .MuiBox-root': {
+      padding: theme.spacing(2),
+    },
+  },
+  form: {
+    margin: 0,
+  },
+  label: {
+    margin: 0,
+    padding: '0 8px',
+    display: 'flex',
+    justifyContent: 'space-between',
+    width: '100%',
+  },
+  switch: {
+    marginRight: '-8px'
   }
-
 }));
 
 function SettingsBlock({
@@ -46,7 +62,6 @@ function SettingsBlock({
     callVolume
   });
 
-
   const handleSettingsSliderState = (name) => (e, newValue) => {
     setSliderValue((prevState) => ({
       ...prevState,
@@ -58,57 +73,51 @@ function SettingsBlock({
 
   return (
 
-
     <div className={classes.root}>
       <Grid
         container
         spacing={2}
       >
-        <Grid item xs={3}>
+        <Grid container direction="row" justify="space-between" alignItems="center" style={{ margin: '8px 16px 8px 8px' }}>
           {sliderValue.ringVolume === 0
             ? <NotificationsOff className={classes.sliderIcons} />
             : <NotificationsActive className={classes.sliderIcons} />}
+          <Slider value={sliderValue.ringVolume} onChange={handleSettingsSliderState('ringVolume')} aria-labelledby="continuous-slider" style={{ width: 'calc(100% - 34px)' }} />
         </Grid>
-        <Grid item xs={9}>
-          <Slider value={sliderValue.ringVolume} onChange={handleSettingsSliderState('ringVolume')} aria-labelledby="continuous-slider" />
-        </Grid>
-
-        <Grid item xs={3}>
+        <Grid container direction="row" justify="space-between" alignItems="center" style={{ margin: '8px 16px 8px 8px' }}>
           {sliderValue.callVolume === 0
             ? <VolumeOff className={classes.sliderIcons} />
             : <VolumeUp className={classes.sliderIcons} />}
+          <Slider value={sliderValue.callVolume} onChange={handleSettingsSliderState('callVolume')} aria-labelledby="continuous-slider" style={{ width: 'calc(100% - 34px)' }} />
         </Grid>
-        <Grid item xs={9}>
-          <Slider value={sliderValue.callVolume} onChange={handleSettingsSliderState('callVolume')} aria-labelledby="continuous-slider" />
-        </Grid>
-
-
-        <FormControl component="fieldset" className={classes.sliderIcons}>
+        <FormControl component="fieldset" className={classes.form}>
           <FormGroup aria-label="position" row>
             <FormControlLabel
               value="top"
-              control={<Switch checked={notifications} color="primary" onChange={handleNotifications} />}
+              control={<Switch className={classes.switch} checked={notifications} color="primary" onChange={handleNotifications} />}
               label="Notifications"
               labelPlacement="start"
+              className={classes.label}
             />
             <FormControlLabel
               value="top"
-              control={<Switch checked={phoneConnectOnStart} color="primary" onChange={handleConnectOnStart} />}
+              control={<Switch className={classes.switch} checked={phoneConnectOnStart} color="primary" onChange={handleConnectOnStart} />}
               label="Auto Connect"
               labelPlacement="start"
+              className={classes.label}
             />
 
             <FormControlLabel
               value="top"
-              control={<Switch disabled={connectingPhone} checked={connectedPhone} color="primary" onChange={handleConnectPhone} />}
+              control={<Switch className={classes.switch} disabled={connectingPhone} checked={connectedPhone} color="primary" onChange={handleConnectPhone} />}
               label={connectedPhone ? 'Disconnect' : 'Connect'}
               labelPlacement="start"
+              className={classes.label}
             />
-            {connectingPhone ? <CircularProgress size={25} /> : ''}
 
           </FormGroup>
+          {connectingPhone ? <LinearProgress /> : ''}
         </FormControl>
-
 
       </Grid>
 

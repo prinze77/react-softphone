@@ -66,11 +66,11 @@ const useStyles = makeStyles((theme) => ({
       '"Segoe UI Symbol"'
     ].join(','),
     '&:hover': {
-      color: '#40a9ff',
+      color: '#3949ab',
       opacity: 1
     },
     '&:focus': {
-      color: '#40a9ff'
+      color: '#3949ab'
     }
   },
   root: {
@@ -79,7 +79,8 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.paper,
     position: 'relative',
     overflow: 'auto',
-    maxHeight: 300
+    maxHeight: 300,
+    padding: 0
   },
   listSection: {
     backgroundColor: 'inherit'
@@ -87,7 +88,12 @@ const useStyles = makeStyles((theme) => ({
   ul: {
     backgroundColor: 'inherit',
     padding: 0
-  }
+  },
+  tab: {
+    '& .MuiBox-root': {
+      padding: theme.spacing(2),
+    },
+  },
 }));
 
 function SwipeCaruselBodyBlock({
@@ -132,7 +138,7 @@ function SwipeCaruselBodyBlock({
         </Tabs>
       </AppBar>
 
-      <TabPanel value={value} index={0}>
+      <TabPanel value={value} index={0} classes={{ root: classes.tab }}>
         {/* Settings Block */}
         <SettingsBlock
           localStatePhone={localStatePhone}
@@ -142,7 +148,7 @@ function SwipeCaruselBodyBlock({
           handleNotifications={handleNotifications}
         />
       </TabPanel>
-      <TabPanel value={value} index={1}>
+      <TabPanel value={value} index={1} classes={{ root: classes.tab }}>
         {calls.length === 0 ? (
           'No Calls'
         ) : (
@@ -155,23 +161,27 @@ function SwipeCaruselBodyBlock({
                   <ListSubheader
                     style={{
                       color: status === 'missed' ? 'red' : 'green',
-                      fontSize: '0.675rem',
-                      lineHeight: '20px'
+                      fontSize: number.length > 11 ? '0.55rem' : '0.675rem',
+                      lineHeight: '20px',
+                      padding: 0,
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      flexDirection: 'unset'
                     }}
                   >
-                    {`${number}`}
-                    {' '}
-                    {direction === 'outgoing' ? (
-                      <CallMadeIcon style={{ fontSize: '0.675rem' }} />
-                    ) : (
-                      <CallReceivedIcon style={{ fontSize: '0.675rem' }} />
-                    )}
-                    <br />
-                    {DateTime.fromISO(time.toISOString())
-                      .setZone(timelocale)
-                      .toString()}
-                    <Divider />
+                    <span>
+                      {`${number}`}
+                      {' '}
+                      {direction === 'outgoing' ? (
+                        <CallMadeIcon style={{ fontSize: number.length > 11 ? '0.55rem' : '0.675rem' }} />
+                      ) : (
+                        <CallReceivedIcon style={{ fontSize: number.length > 11 ? '0.55rem' : '0.675rem' }} />
+                      )}
+                    </span>
+                    {DateTime.fromISO(time.toISOString()).setZone(timelocale).toString()}
                   </ListSubheader>
+                  <Divider />
                 </ul>
               </li>
             ))}
@@ -181,7 +191,6 @@ function SwipeCaruselBodyBlock({
     </div>
   );
 }
-
 
 SwipeCaruselBodyBlock.propTypes = {
   calls: PropTypes.any,
@@ -196,7 +205,6 @@ SwipeCaruselBodyBlock.propTypes = {
 };
 TabPanel.propTypes = {
   props: PropTypes.any,
-
 
 };
 export default SwipeCaruselBodyBlock;
