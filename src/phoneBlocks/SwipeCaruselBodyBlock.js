@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 import {
   AppBar,
   Tabs,
@@ -9,28 +9,28 @@ import {
   List,
   Box,
   Typography
-} from '@material-ui/core';
+} from '@material-ui/core'
 
 import {
   Settings as SettingsIcon,
   History as HistoryIcon,
   CallMade as CallMadeIcon,
   CallReceived as CallReceivedIcon
-} from '@material-ui/icons';
+} from '@material-ui/icons'
 
-import { DateTime } from 'luxon';
-import PropTypes from 'prop-types';
-import SettingsBlock from './SettingsBlock';
+import { DateTime } from 'luxon'
+import PropTypes from 'prop-types'
+import SettingsBlock from './SettingsBlock'
 
 function TabPanel(props) {
   const {
     children, value, index, ...other
-  } = props;
+  } = props
 
   return (
     <Typography
-      component="div"
-      role="tabpanel"
+      component='div'
+      role='tabpanel'
       hidden={value !== index}
       id={`full-width-tabpanel-${index}`}
       aria-labelledby={`full-width-tab-${index}`}
@@ -38,14 +38,14 @@ function TabPanel(props) {
     >
       {value === index && <Box p={3}>{children}</Box>}
     </Typography>
-  );
+  )
 }
 
 function a11yProps(index) {
   return {
     id: `full-width-tab-${index}`,
     'aria-controls': `full-width-tabpanel-${index}`
-  };
+  }
 }
 const useStyles = makeStyles((theme) => ({
   tabs: {
@@ -91,10 +91,10 @@ const useStyles = makeStyles((theme) => ({
   },
   tab: {
     '& .MuiBox-root': {
-      padding: theme.spacing(2),
-    },
-  },
-}));
+      padding: theme.spacing(2)
+    }
+  }
+}))
 
 function SwipeCaruselBodyBlock({
   calls,
@@ -105,34 +105,34 @@ function SwipeCaruselBodyBlock({
   handleNotifications,
   timelocale
 }) {
-  const classes = useStyles();
-  const [value, setValue] = React.useState(0);
+  const classes = useStyles()
+  const [value, setValue] = React.useState(0)
 
   const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
+    setValue(newValue)
+  }
 
   return (
     <div>
-      <AppBar position="static" color="default">
+      <AppBar position='static' color='default'>
         <Tabs
           value={value}
           onChange={handleChange}
-          indicatorColor="primary"
-          textColor="primary"
-          variant="fullWidth"
-          aria-label="full width tabs example"
+          indicatorColor='primary'
+          textColor='primary'
+          variant='fullWidth'
+          aria-label='full width tabs example'
         >
           <Tab
             className={classes.tabs}
             icon={<SettingsIcon />}
-            label="Settings"
+            label='Settings'
             {...a11yProps(0)}
           />
           <Tab
             className={classes.tabs}
             icon={<HistoryIcon />}
-            label="History"
+            label='History'
             {...a11yProps(1)}
           />
         </Tabs>
@@ -189,7 +189,7 @@ function SwipeCaruselBodyBlock({
         )}
       </TabPanel>
     </div>
-  );
+  )
 }
 
 SwipeCaruselBodyBlock.propTypes = {
@@ -202,9 +202,9 @@ SwipeCaruselBodyBlock.propTypes = {
   callVolume: PropTypes.any,
   timelocale: PropTypes.any
 
-};
+}
 TabPanel.propTypes = {
-  props: PropTypes.any,
+  props: PropTypes.any
 
-};
-export default SwipeCaruselBodyBlock;
+}
+export default SwipeCaruselBodyBlock

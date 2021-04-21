@@ -1,5 +1,5 @@
-import React from 'react';
-import SwipeableViews from 'react-swipeable-views';
+import React from 'react'
+import SwipeableViews from 'react-swipeable-views'
 
 import {
   Typography,
@@ -7,19 +7,19 @@ import {
   AppBar,
   Tabs,
   Tab,
-  makeStyles,
-} from '@material-ui/core';
-import PropTypes from 'prop-types';
+  makeStyles
+} from '@material-ui/core'
+import PropTypes from 'prop-types'
 
 function TabPanel(props) {
   const {
     children, value, index, ...other
-  } = props;
+  } = props
 
   return (
     <Typography
-      component="div"
-      role="tabpanel"
+      component='div'
+      role='tabpanel'
       hidden={value !== index}
       id={`full-width-tabpanel-${index}`}
       aria-labelledby={`full-width-tab-${index}`}
@@ -27,14 +27,14 @@ function TabPanel(props) {
     >
       {value === index && <Box p={3}>{children}</Box>}
     </Typography>
-  );
+  )
 }
 
 function a11yProps(index) {
   return {
     id: `full-width-tab-${index}`,
     'aria-controls': `full-width-tabpanel-${index}`
-  };
+  }
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -64,33 +64,33 @@ const useStyles = makeStyles((theme) => ({
     }
   },
   tabPanelHold: {
-    backgroundColor: '#ff8686',
+    backgroundColor: '#ff8686'
   },
   tabPanelActive: {
     padding: `${theme.spacing(1)}px ${theme.spacing(3)}px`,
-    backgroundColor: '#d0f6bb',
+    backgroundColor: '#d0f6bb'
   },
   text: {
-    color: 'black',
+    color: 'black'
   }
 
-}));
+}))
 
 function SwipeCaruselBlock({
   localStatePhone, activeChannel, setActiveChannel
 }) {
-  const classes = useStyles();
+  const classes = useStyles()
   const [duration, setDuration] = React.useState(
     [{
-      duration: 0,
+      duration: 0
     },
     {
-      duration: 0,
+      duration: 0
     },
     {
-      duration: 0,
+      duration: 0
     }]
-  );
+  )
   const [intervals, setintervals] = React.useState(
     [{
       intrId: 0,
@@ -105,56 +105,56 @@ function SwipeCaruselBlock({
       active: false
     }
     ]
-  );
-  const { displayCalls } = localStatePhone;
+  )
+  const { displayCalls } = localStatePhone
   const handleTabChangeIndex = (index) => {
-    setActiveChannel(index);
-  };
+    setActiveChannel(index)
+  }
   const handleTabChange = (event, newValue) => {
-    setActiveChannel(newValue);
-  };
+    setActiveChannel(newValue)
+  }
 
   displayCalls.map((displayCall, key) => {
     // if Call just started then increment duration every one second
-    if (displayCall.inCall === true
-      && displayCall.inAnswer === true && intervals[key].active === false) {
+    if (displayCall.inCall === true &&
+      displayCall.inAnswer === true && intervals[key].active === false) {
       const intr = setInterval(() => {
         setDuration((durations) => ({
           ...durations,
           [key]: { duration: durations[key].duration + 1 }
-        }));
-      }, 1000);
+        }))
+      }, 1000)
 
-      setintervals((inter) => ({ ...inter, [key]: { intrId: intr, active: true } }));
+      setintervals((inter) => ({ ...inter, [key]: { intrId: intr, active: true } }))
     }
     // if Call ended  then stop  increment duration every one second
-    if (displayCall.inCall === false
-      && displayCall.inAnswer === false && intervals[key].active === true) {
-      clearInterval(intervals[key].intrId);
-      setDuration((durations) => ({ ...durations, [key]: { duration: 0 } }));
-      setintervals((inter) => ({ ...inter, [key]: { intrId: 0, active: false } }));
+    if (displayCall.inCall === false &&
+      displayCall.inAnswer === false && intervals[key].active === true) {
+      clearInterval(intervals[key].intrId)
+      setDuration((durations) => ({ ...durations, [key]: { duration: 0 } }))
+      setintervals((inter) => ({ ...inter, [key]: { intrId: 0, active: false } }))
     }
-    return true;
-  });
+    return true
+  })
 
   return (
     <div>
-      <AppBar position="static" color="default">
+      <AppBar position='static' color='default'>
         <Tabs
           value={activeChannel}
           onChange={handleTabChange}
-          indicatorColor="primary"
-          textColor="primary"
-          variant="fullWidth"
-          aria-label="full width tabs example"
+          indicatorColor='primary'
+          textColor='primary'
+          variant='fullWidth'
+          aria-label='full width tabs example'
         >
-          <Tab className={classes.tabs} label="CH 1" {...a11yProps(0)} />
-          <Tab className={classes.tabs} label="CH 2" {...a11yProps(1)} />
-          <Tab className={classes.tabs} label="Ch 3" {...a11yProps(2)} />
+          <Tab className={classes.tabs} label='CH 1' {...a11yProps(0)} />
+          <Tab className={classes.tabs} label='CH 2' {...a11yProps(1)} />
+          <Tab className={classes.tabs} label='Ch 3' {...a11yProps(2)} />
         </Tabs>
       </AppBar>
       <SwipeableViews
-        axis="x"
+        axis='x'
         index={activeChannel}
         onChangeIndex={handleTabChangeIndex}
       >
@@ -191,7 +191,7 @@ function SwipeCaruselBlock({
                           {displayCall.direction}
                         </Typography>
                       </div>
-                    );
+                    )
                   }
                   if (displayCall.inTransfer === true) {
                     return (
@@ -221,18 +221,18 @@ function SwipeCaruselBlock({
                           {displayCall.transferNumber}
                         </Typography>
                         <Typography>
-                          {displayCall.attendedTransferOnline.length > 1
-                          && !displayCall.inConference ? (
+                          {displayCall.attendedTransferOnline.length > 1 &&
+                          !displayCall.inConference ? (
                             <span>
-                              { 'Talking with :' }
-                              {' '}
-                              {displayCall.attendedTransferOnline}
-                            </span>
+                                { 'Talking with :' }
+                                {' '}
+                                {displayCall.attendedTransferOnline}
+                              </span>
                             ) : null}
                         </Typography>
 
                       </div>
-                    );
+                    )
                   }
 
                   return (
@@ -256,7 +256,7 @@ function SwipeCaruselBlock({
                       </Typography>
 
                     </div>
-                  );
+                  )
                 }
 
                 return (
@@ -279,7 +279,7 @@ function SwipeCaruselBlock({
                     </Typography>
 
                   </div>
-                );
+                )
               }
 
               return (
@@ -294,7 +294,7 @@ function SwipeCaruselBlock({
                   </Typography>
 
                 </div>
-              );
+              )
             }}
 
           </TabPanel>
@@ -302,7 +302,7 @@ function SwipeCaruselBlock({
 
       </SwipeableViews>
     </div>
-  );
+  )
 }
 
 SwipeCaruselBlock.propTypes = {
@@ -310,5 +310,5 @@ SwipeCaruselBlock.propTypes = {
   activeChannel: PropTypes.any,
   setActiveChannel: PropTypes.any
 
-};
-export default SwipeCaruselBlock;
+}
+export default SwipeCaruselBlock

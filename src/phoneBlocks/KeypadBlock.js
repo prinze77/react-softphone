@@ -27,12 +27,12 @@ import {
   Cancel,
   SwapCalls,
   CallMerge,
-  Search,
+  Search
 } from '@material-ui/icons';
 
 import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import OnlineIndicator from '../../../../components/OnlineIndicator';
+import OnlineIndicator from './OnlineIndicator';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -74,7 +74,7 @@ const useStyles = makeStyles((theme) => ({
   list: {
     width: '100%',
     maxWidth: 360,
-    backgroundColor: theme.palette.background.paper,
+    backgroundColor: theme.palette.background.paper
   },
   flexBetween: {
     display: 'flex',
@@ -85,15 +85,15 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    margin: '0 0 0 10px',
+    margin: '0 0 0 10px'
   },
   input: {
     marginLeft: theme.spacing(1),
-    flex: 1,
+    flex: 1
   },
   iconButton: {
-    padding: '0 10px',
-  },
+    padding: '0 10px'
+  }
 }));
 
 function KeypadBlock({

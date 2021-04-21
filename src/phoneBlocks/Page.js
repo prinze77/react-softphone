@@ -1,15 +1,14 @@
 import React, {
-  forwardRef,
-} from 'react';
-import { Helmet } from 'react-helmet';
-import PropTypes from 'prop-types';
+  forwardRef
+} from 'react'
+import { Helmet } from 'react-helmet'
+import PropTypes from 'prop-types'
 
 const Page = forwardRef(({
   title,
   children,
   ...rest
 }, ref) => {
-
   return (
     <div
       ref={ref}
@@ -20,12 +19,12 @@ const Page = forwardRef(({
       </Helmet>
       {children}
     </div>
-  );
-});
+  )
+})
 
 Page.propTypes = {
   children: PropTypes.node,
   title: PropTypes.string
-};
+}
 
-export default Page;
+export default Page

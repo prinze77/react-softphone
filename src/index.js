@@ -3,7 +3,7 @@ import React,
   createRef,
   useEffect,
   useState
-} from 'react';
+} from 'react'
 import {
   Divider,
   Drawer,
@@ -11,26 +11,26 @@ import {
   TextField,
   Snackbar,
   makeStyles
-} from '@material-ui/core';
+} from '@material-ui/core'
 import {
   ChevronLeft as ChevronLeftIcon,
   ChevronRight as ChevronRightIcon,
   Call as CallIcon
-} from '@material-ui/icons';
-import _ from 'lodash';
-import MuiAlert from '@material-ui/lab/Alert';
-import PropTypes from 'prop-types';
-import Page from './phoneBlocks/Page';
-import KeypadBlock from './phoneBlocks/KeypadBlock';
-import SwipeCaruselBlock from './phoneBlocks/SwipeCaruselBlock';
-import SwipeCaruselBodyBlock from './phoneBlocks/SwipeCaruselBodyBlock';
-import StatusBlock from './phoneBlocks/StatusBlock';
-import CallQueue from './phoneBlocks/CallQueue';
-import CallsFlowControl from './CallsFlowControl';
+} from '@material-ui/icons'
+import _ from 'lodash'
+import MuiAlert from '@material-ui/lab/Alert'
+import PropTypes from 'prop-types'
+import Page from './phoneBlocks/Page'
+import KeypadBlock from './phoneBlocks/KeypadBlock'
+import SwipeCaruselBlock from './phoneBlocks/SwipeCaruselBlock'
+import SwipeCaruselBodyBlock from './phoneBlocks/SwipeCaruselBodyBlock'
+import StatusBlock from './phoneBlocks/StatusBlock'
+import CallQueue from './phoneBlocks/CallQueue'
+import CallsFlowControl from './CallsFlowControl'
 
-const flowRoute = new CallsFlowControl();
-const player = createRef();
-const ringer = createRef();
+const flowRoute = new CallsFlowControl()
+const player = createRef()
+const ringer = createRef()
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -98,7 +98,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'flex-start'
   }
 
-}));
+}))
 
 function SoftPhone({
   callVolume,
@@ -111,7 +111,7 @@ function SoftPhone({
   connectOnStart = true,
   config,
   timelocale = 'UTC',
-  asteriskAccounts
+  asteriskAccounts = []
 }) {
   const defaultSoftPhoneState = {
     displayCalls: [
@@ -191,58 +191,58 @@ function SoftPhone({
     activeCalls: [],
     callVolume,
     ringVolume
-  };
-  const classes = useStyles();
-  const [drawerOpen, drawerSetOpen] = useState(false);
-  const [dialState, setdialState] = useState('');
-  const [activeChannel, setActiveChannel] = useState(0);
-  const [localStatePhone, setLocalStatePhone] = useState(defaultSoftPhoneState);
-  const [notificationState, setNotificationState] = React.useState({ open: false, message: '' });
-  const [calls, setCalls] = React.useState([]);
+  }
+  const classes = useStyles()
+  const [drawerOpen, drawerSetOpen] = useState(false)
+  const [dialState, setdialState] = useState('')
+  const [activeChannel, setActiveChannel] = useState(0)
+  const [localStatePhone, setLocalStatePhone] = useState(defaultSoftPhoneState)
+  const [notificationState, setNotificationState] = React.useState({ open: false, message: '' })
+  const [calls, setCalls] = React.useState([])
   const notify = (message) => {
-    setNotificationState((notification) => ({ ...notification, open: true, message }));
-  };
-  Notification.requestPermission();
+    setNotificationState((notification) => ({ ...notification, open: true, message }))
+  }
+  Notification.requestPermission()
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {
-      return;
+      return
     }
 
-    setNotificationState((notification) => ({ ...notification, open: false }));
-  };
-  function Alert(props) {
-    return <MuiAlert elevation={6} variant="filled" {...props} />;
+    setNotificationState((notification) => ({ ...notification, open: false }))
   }
-  flowRoute.activeChanel = localStatePhone.displayCalls[activeChannel];
-  flowRoute.connectedPhone = localStatePhone.connectedPhone;
+  function Alert(props) {
+    return <MuiAlert elevation={6} variant='filled' {...props} />
+  }
+  flowRoute.activeChanel = localStatePhone.displayCalls[activeChannel]
+  flowRoute.connectedPhone = localStatePhone.connectedPhone
   flowRoute.engineEvent = (event, payload) => {
     // Listen Here for Engine "UA jssip" events
     switch (event) {
       case 'connecting':
-        break;
+        break
       case 'connected':
         setLocalStatePhone((prevState) => ({
           ...prevState,
           connectingPhone: false,
           connectedPhone: true
-        }));
-        break;
+        }))
+        break
       case 'registered':
-        break;
+        break
       case 'disconnected':
         setLocalStatePhone((prevState) => ({
           ...prevState,
           connectingPhone: false,
           connectedPhone: false
-        }));
-        break;
+        }))
+        break
       case 'registrationFailed':
-        break;
+        break
 
       default:
-        break;
+        break
     }
-  };
+  }
 
   flowRoute.onCallActionConnection = async (type, payload, data) => {
     //  console.log(e);
@@ -261,9 +261,9 @@ function SoftPhone({
             attendedTransferOnline: data.request.headers['P-Asserted-Identity'][0].raw.split(' ')[0]
 
           } : a))
-        }));
+        }))
 
-        break;
+        break
       case 'incomingCall':
         // looks like new call its incoming call
         // Save new object with the Phone data of new incoming call into the array with Phone data
@@ -279,25 +279,25 @@ function SoftPhone({
               direction: payload.direction
             }
           ]
-        }));
+        }))
         if (document.visibilityState !== 'visible' && localStatePhone.notifications) {
           const notification = new Notification('Incoming Call', {
             icon: 'https://voip.robofx.com/static/images/call-icon-telefono.png',
             body: `Caller: ${(payload.remote_identity.display_name !== '') ? `${payload.remote_identity.display_name || ''}` : payload.remote_identity.uri.user}`
-          });
+          })
           notification.onclick = function () {
-            window.parent.focus();
-            window.focus(); // just in case, older browsers
-            this.close();
-          };
+            window.parent.focus()
+            window.focus() // just in case, older browsers
+            this.close()
+          }
         }
 
-        break;
+        break
       case 'outgoingCall':
         // looks like new call its outgoing call
         // Create object with the Display data of new outgoing call
 
-        const newProgressLocalStatePhone = _.cloneDeep(localStatePhone);
+        const newProgressLocalStatePhone = _.cloneDeep(localStatePhone)
         newProgressLocalStatePhone.displayCalls[activeChannel] = {
           ...localStatePhone.displayCalls[activeChannel],
           inCall: true,
@@ -307,16 +307,16 @@ function SoftPhone({
           sessionId: payload.id,
           callNumber: payload.remote_identity.uri.user,
           callInfo: 'In out call'
-        };
+        }
         // Save new object into the array with display calls
 
         setLocalStatePhone((prevState) => ({
           ...prevState,
           displayCalls: newProgressLocalStatePhone.displayCalls
-        }));
-        setdialState('');
+        }))
+        setdialState('')
 
-        break;
+        break
       case 'callEnded':
         // Call is ended, lets delete the call from calling queue
         // Call is ended, lets check and delete the call from  display calls list
@@ -339,10 +339,10 @@ function SoftPhone({
             callInfo: 'Ready'
 
           } : a))
-        }));
+        }))
 
-        const firstCheck = localStatePhone.phoneCalls.filter((item) => item.sessionId === payload && item.direction === 'incoming');
-        const secondCheck = localStatePhone.displayCalls.filter((item) => item.sessionId === payload);
+        const firstCheck = localStatePhone.phoneCalls.filter((item) => item.sessionId === payload && item.direction === 'incoming')
+        const secondCheck = localStatePhone.displayCalls.filter((item) => item.sessionId === payload)
         if (firstCheck.length === 1) {
           setCalls((call) => [{
             status: 'missed',
@@ -350,7 +350,7 @@ function SoftPhone({
             direction: firstCheck[0].direction,
             number: firstCheck[0].callNumber,
             time: new Date()
-          }, ...call]);
+          }, ...call])
         } else if (secondCheck.length === 1) {
           setCalls((call) => [{
             status: secondCheck[0].inAnswer ? 'answered' : 'missed',
@@ -358,25 +358,25 @@ function SoftPhone({
             direction: secondCheck[0].direction,
             number: secondCheck[0].callNumber,
             time: new Date()
-          }, ...call]);
+          }, ...call])
         }
-        break;
+        break
       case 'callAccepted':
         // Established conection
         // Set caller number for Display calls
-        let displayCallId = data.customPayload;
-        let acceptedCall = localStatePhone.phoneCalls.filter((item) => item.sessionId === payload);
+        let displayCallId = data.customPayload
+        let acceptedCall = localStatePhone.phoneCalls.filter((item) => item.sessionId === payload)
 
         if (!acceptedCall[0]) {
-          acceptedCall = localStatePhone.displayCalls.filter((item) => item.sessionId === payload);
-          displayCallId = acceptedCall[0].id;
+          acceptedCall = localStatePhone.displayCalls.filter((item) => item.sessionId === payload)
+          displayCallId = acceptedCall[0].id
         }
 
         // Call is Established
         // Lets make a copy of localStatePhone Object
-        const newAcceptedLocalStatePhone = _.cloneDeep(localStatePhone);
+        const newAcceptedLocalStatePhone = _.cloneDeep(localStatePhone)
         // Lets check and delete the call from  phone calls list
-        const newAcceptedPhoneCalls = newAcceptedLocalStatePhone.phoneCalls.filter((item) => item.sessionId !== payload);
+        const newAcceptedPhoneCalls = newAcceptedLocalStatePhone.phoneCalls.filter((item) => item.sessionId !== payload)
         // Save to the local state
         setLocalStatePhone((prevState) => ({
           ...prevState,
@@ -392,9 +392,9 @@ function SoftPhone({
             hold: false,
             callInfo: 'In call'
           } : a))
-        }));
+        }))
 
-        break;
+        break
       case 'hold':
 
         // let holdCall = localStatePhone.displayCalls.filter((item) => item.sessionId === payload);
@@ -405,8 +405,8 @@ function SoftPhone({
             ...a,
             hold: true
           } : a))
-        }));
-        break;
+        }))
+        break
       case 'unhold':
 
         setLocalStatePhone((prevState) => ({
@@ -415,8 +415,8 @@ function SoftPhone({
             ...a,
             hold: false
           } : a))
-        }));
-        break;
+        }))
+        break
       case 'unmute':
 
         setLocalStatePhone((prevState) => ({
@@ -425,8 +425,8 @@ function SoftPhone({
             ...a,
             muted: 0
           } : a))
-        }));
-        break;
+        }))
+        break
       case 'mute':
 
         setLocalStatePhone((prevState) => ({
@@ -435,15 +435,15 @@ function SoftPhone({
             ...a,
             muted: 1
           } : a))
-        }));
-        break;
+        }))
+        break
       case 'notify':
-        notify(payload);
-        break;
+        notify(payload)
+        break
       default:
-        break;
+        break
     }
-  };
+  }
   const handleSettingsSlider = (name, newValue) => {
     // setLocalStatePhone((prevState) => ({
     //   ...prevState,
@@ -452,100 +452,100 @@ function SoftPhone({
 
     switch (name) {
       case 'ringVolume':
-        ringer.current.volume = parseInt(newValue, 10) / 100;
-        setRingVolume(newValue);
+        ringer.current.volume = parseInt(newValue, 10) / 100
+        setRingVolume(newValue)
         // flowRoute.setOutputVolume(newValue);
-        break;
+        break
 
       case 'callVolume':
-        player.current.volume = parseInt(newValue, 10) / 100;
-        setCallVolume(newValue);
+        player.current.volume = parseInt(newValue, 10) / 100
+        setCallVolume(newValue)
 
-        break;
+        break
 
       default:
-        break;
+        break
     }
-  };
+  }
   const handleConnectPhone = (event, connectionStatus) => {
     try {
-      event.persist();
+      event.persist()
     } catch (e) {
     }
     setLocalStatePhone((prevState) => ({
       ...prevState,
       connectingPhone: true
-    }));
+    }))
     if (connectionStatus === true) {
-      flowRoute.start();
+      flowRoute.start()
     } else {
-      flowRoute.stop();
+      flowRoute.stop()
     }
 
-    return true;
-  };
+    return true
+  }
   const toggleDrawer = (openDrawer) => (event) => {
     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
-      return;
+      return
     }
-    drawerSetOpen(openDrawer);
-  };
+    drawerSetOpen(openDrawer)
+  }
   const handleDialStateChange = (event) => {
-    event.persist();
-    setdialState(event.target.value);
-  };
+    event.persist()
+    setdialState(event.target.value)
+  }
   const handleConnectOnStart = (event, newValue) => {
-    event.persist();
+    event.persist()
     setLocalStatePhone((prevState) => ({
       ...prevState,
       phoneConnectOnStart: newValue
-    }));
+    }))
 
-    setConnectOnStartToLocalStorage(newValue);
-  };
+    setConnectOnStartToLocalStorage(newValue)
+  }
   const handleNotifications = (event, newValue) => {
-    event.persist();
+    event.persist()
     setLocalStatePhone((prevState) => ({
       ...prevState,
       notifications: newValue
-    }));
+    }))
 
-    setNotifications(newValue);
-  };
+    setNotifications(newValue)
+  }
   const handlePressKey = (event) => {
-    event.persist();
-    setdialState(dialState + event.currentTarget.value);
-  };
+    event.persist()
+    setdialState(dialState + event.currentTarget.value)
+  }
   const handleCall = (event) => {
-    event.persist();
+    event.persist()
     if (dialState.match(/^[0-9]+$/) != null) {
-      flowRoute.call(dialState);
+      flowRoute.call(dialState)
     }
-  };
+  }
   const handleEndCall = (event) => {
-    event.persist();
-    flowRoute.hungup(localStatePhone.displayCalls[activeChannel].sessionId);
-  };
+    event.persist()
+    flowRoute.hungup(localStatePhone.displayCalls[activeChannel].sessionId)
+  }
   const handleHold = (sessionId, hold) => {
     if (hold === false) {
-      flowRoute.hold(sessionId);
+      flowRoute.hold(sessionId)
     } else if (hold === true) {
-      flowRoute.unhold(sessionId);
+      flowRoute.unhold(sessionId)
     }
-  };
+  }
   const handleAnswer = (event) => {
-    flowRoute.answer(event.currentTarget.value);
-  };
+    flowRoute.answer(event.currentTarget.value)
+  }
   const handleReject = (event) => {
-    flowRoute.hungup(event.currentTarget.value);
-  };
+    flowRoute.hungup(event.currentTarget.value)
+  }
   const handleMicMute = () => {
-    flowRoute.setMicMuted();
-  };
+    flowRoute.setMicMuted()
+  }
 
   const handleCallTransfer = (transferedNumber) => {
-    if (!dialState && !transferedNumber) return;
-    if (transferedNumber) setdialState(transferedNumber);
+    if (!dialState && !transferedNumber) return
+    if (transferedNumber) setdialState(transferedNumber)
     const newCallTransferDisplayCalls = _.map(
       localStatePhone.displayCalls, (a) => (a.id === activeChannel ? {
         ...a,
@@ -556,14 +556,14 @@ function SoftPhone({
         allowTransfer: false,
         callInfo: 'Transfering...'
       } : a)
-    );
+    )
     setLocalStatePhone((prevState) => ({
       ...prevState,
       displayCalls: newCallTransferDisplayCalls
-    }));
-    flowRoute.activeCall.sendDTMF(`##${dialState}`);
-    setdialState('');
-  };
+    }))
+    flowRoute.activeCall.sendDTMF(`##${dialState}`)
+    setdialState('')
+  }
 
   const handleCallAttendedTransfer = (event) => {
     switch (event) {
@@ -580,9 +580,9 @@ function SoftPhone({
             callInfo: 'Attended Transfering...',
             inTransfer: true
           } : a))
-        }));
-        flowRoute.activeCall.sendDTMF(`*2${dialState}`);
-        break;
+        }))
+        flowRoute.activeCall.sendDTMF(`*2${dialState}`)
+        break
       case 'merge':
         const newCallMergeAttendedTransferDisplayCalls = _.map(
           localStatePhone.displayCalls, (a) => (a.id === activeChannel ? {
@@ -590,20 +590,20 @@ function SoftPhone({
             callInfo: 'Conference',
             inConference: true
           } : a)
-        );
+        )
         setLocalStatePhone((prevState) => ({
           ...prevState,
           displayCalls: newCallMergeAttendedTransferDisplayCalls
-        }));
+        }))
 
-        flowRoute.activeCall.sendDTMF('*5');
-        break;
+        flowRoute.activeCall.sendDTMF('*5')
+        break
       case 'swap':
-        flowRoute.activeCall.sendDTMF('*6');
-        break;
+        flowRoute.activeCall.sendDTMF('*6')
+        break
       case 'finish':
-        flowRoute.activeCall.sendDTMF('*4');
-        break;
+        flowRoute.activeCall.sendDTMF('*4')
+        break
       case 'cancel':
         const newCallCancelAttendedTransferDisplayCalls = _.map(
           localStatePhone.displayCalls, (a) => (a.id === activeChannel ? {
@@ -617,58 +617,58 @@ function SoftPhone({
             callInfo: 'In Call',
             inTransfer: false
           } : a)
-        );
+        )
         setLocalStatePhone((prevState) => ({
           ...prevState,
           displayCalls: newCallCancelAttendedTransferDisplayCalls
-        }));
-        flowRoute.activeCall.sendDTMF('*3');
-        break;
+        }))
+        flowRoute.activeCall.sendDTMF('*3')
+        break
       default:
-        break;
+        break
     }
-  };
+  }
   const handleSettingsButton = () => {
-    flowRoute.tmpEvent();
-  };
+    flowRoute.tmpEvent()
+  }
 
   useEffect(() => {
-    flowRoute.config = config;
-    flowRoute.init();
+    flowRoute.config = config
+    flowRoute.init()
     if (localStatePhone.phoneConnectOnStart) {
-      handleConnectPhone(null, true);
+      handleConnectPhone(null, true)
     }
 
     try {
-      player.current.defaultMuted = false;
-      player.current.autoplay = true;
-      player.current.volume = parseInt(localStatePhone.callVolume, 10) / 100;
+      player.current.defaultMuted = false
+      player.current.autoplay = true
+      player.current.volume = parseInt(localStatePhone.callVolume, 10) / 100
       // player.volume = this.outputVolume;
-      flowRoute.player = player;
-      ringer.current.src = '/sound/ringing.mp3';
-      ringer.current.loop = true;
-      ringer.current.volume = parseInt(localStatePhone.ringVolume, 10) / 100;
-      flowRoute.ringer = ringer;
+      flowRoute.player = player
+      ringer.current.src = '/sound/ringing.mp3'
+      ringer.current.loop = true
+      ringer.current.volume = parseInt(localStatePhone.ringVolume, 10) / 100
+      flowRoute.ringer = ringer
     } catch (e) {
 
     }
   },
-  [config, localStatePhone.callVolume, localStatePhone.phoneConnectOnStart, localStatePhone.ringVolume]);
+  [config, localStatePhone.callVolume, localStatePhone.phoneConnectOnStart, localStatePhone.ringVolume])
 
   return (
     <Page
       className={classes.root}
-      title="Phone"
+      title='Phone'
     >
 
       {/* Phone Button */}
-      <label htmlFor="icon-button-file">
+      <label htmlFor='icon-button-file'>
         <IconButton
           className={classes.phoneButton}
-          color="primary"
-          aria-label="call picture"
-          component="span"
-          variant="contained"
+          color='primary'
+          aria-label='call picture'
+          component='span'
+          variant='contained'
           onClick={toggleDrawer(true)}
         >
           <CallIcon />
@@ -680,9 +680,9 @@ function SoftPhone({
         classes={{
           paper: classes.drawerPaper
         }}
-        anchor="right"
+        anchor='right'
         open={drawerOpen}
-        variant="persistent"
+        variant='persistent'
       >
         {/* Hide Phone Button */}
         <div style={{ minHeight: 30 }} className={classes.drawerHeader}>
@@ -691,7 +691,7 @@ function SoftPhone({
           </IconButton>
         </div>
         <Snackbar open={notificationState.open} autoHideDuration={3000} onClose={handleClose}>
-          <Alert onClose={handleClose} severity="warning">
+          <Alert onClose={handleClose} severity='warning'>
             {' '}
             { notificationState.message}
             {' '}
@@ -719,8 +719,8 @@ function SoftPhone({
           <TextField
             value={dialState}
             style={{ textAlign: 'right' }}
-            id="standard-basic"
-            label="Number"
+            id='standard-basic'
+            label='Number'
             fullWidth
             onChange={handleDialStateChange}
           />
@@ -765,13 +765,13 @@ function SoftPhone({
       </Drawer>
 
       <div hidden>
-        <audio preload="auto" ref={player} />
+        <audio preload='auto' ref={player} />
       </div>
       <div hidden>
-        <audio preload="auto" ref={ringer} />
+        <audio preload='auto' ref={ringer} />
       </div>
     </Page>
-  );
+  )
 }
 
 SoftPhone.propTypes = {
@@ -785,7 +785,7 @@ SoftPhone.propTypes = {
   connectOnStart: PropTypes.any,
   config: PropTypes.any,
   timelocale: PropTypes.any,
-  asteriskAccounts: PropTypes.any,
-};
+  asteriskAccounts: PropTypes.any
+}
 
-export default SoftPhone;
+export default SoftPhone
