@@ -543,18 +543,16 @@ function SoftPhone({
     flowRoute.setMicMuted()
   }
 
-  const handleCallTransfer = (transferedNumber) => {
-    if (!dialState && !transferedNumber) return
-    if (transferedNumber) setdialState(transferedNumber)
+  const handleCallTransfer = (transferredNumber, event) => {
     const newCallTransferDisplayCalls = _.map(
       localStatePhone.displayCalls, (a) => (a.id === activeChannel ? {
         ...a,
-        transferNumber: dialState,
+        transferNumber: dialState || transferredNumber,
         inTransfer: true,
         allowAttendedTransfer: false,
         allowFinishTransfer: false,
         allowTransfer: false,
-        callInfo: 'Transfering...'
+        callInfo: 'Transferring...'
       } : a)
     )
     setLocalStatePhone((prevState) => ({
@@ -737,6 +735,7 @@ function SoftPhone({
             activeChanel={localStatePhone.displayCalls[activeChannel]}
             handleSettingsButton={handleSettingsButton}
             asteriskAccounts={asteriskAccounts}
+            dialState={dialState}
           />
         </div>
 

@@ -1,9 +1,10 @@
 import {
   Grid, Typography, Box, Paper, Fab
-} from '@material-ui/core'
-import React from 'react'
-import { makeStyles } from '@material-ui/core/styles'
-import { Call, CallEnd } from '@material-ui/icons'
+} from '@material-ui/core';
+import React from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import { Call, CallEnd } from '@material-ui/icons';
+import PropTypes from 'prop-types';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -62,14 +63,14 @@ const useStyles = makeStyles((theme) => ({
   ringing: {
     animation: '$ringing .6s infinite'
   }
-}))
+}));
 
 function CallQueue({ calls, handleAnswer, handleReject }) {
-  const classes = useStyles()
+  const classes = useStyles();
   return (
     <div className={classes.root}>
       {calls.map((call) => {
-        const parsedCaller = call.callNumber.split('-')
+        const parsedCaller = call.callNumber.split('-');
         return (
           <Paper
             className={classes.wrapper}
@@ -77,24 +78,24 @@ function CallQueue({ calls, handleAnswer, handleReject }) {
           >
             <Grid item xs={12}>
               {parsedCaller[0] ? (
-                <Box overflow='auto' component='div' whiteSpace='normal' bgcolor='background.paper'>
-                  <Typography variant='subtitle1'>
+                <Box overflow="auto" component="div" whiteSpace="normal" bgcolor="background.paper">
+                  <Typography variant="subtitle1">
                     Caller:
                     {parsedCaller[0]}
                   </Typography>
                 </Box>
               ) : <div />}
               {parsedCaller[1] ? (
-                <Box overflow='auto' component='div' whiteSpace='normal' bgcolor='background.paper'>
-                  <Typography variant='subtitle1'>
+                <Box overflow="auto" component="div" whiteSpace="normal" bgcolor="background.paper">
+                  <Typography variant="subtitle1">
                     Jurisdiction:
                     {parsedCaller[1]}
                   </Typography>
                 </Box>
               ) : <div />}
               {parsedCaller[2] ? (
-                <Box overflow='auto' component='div' whiteSpace='normal' bgcolor='background.paper'>
-                  <Typography variant='subtitle1'>
+                <Box overflow="auto" component="div" whiteSpace="normal" bgcolor="background.paper">
+                  <Typography variant="subtitle1">
                     To Number:
                     {parsedCaller[2]}
                   </Typography>
@@ -104,12 +105,10 @@ function CallQueue({ calls, handleAnswer, handleReject }) {
             </Grid>
 
             <Grid item xs={6}>
-              <div
-                className={classes.paper}
-              >
+              <div>
                 <Fab
                   className={classes.callButton}
-                  size='small'
+                  size="small"
                   onClick={handleAnswer}
                   value={call.sessionId}
                 >
@@ -118,10 +117,15 @@ function CallQueue({ calls, handleAnswer, handleReject }) {
               </div>
             </Grid>
             <Grid item xs={6}>
-              <div className={classes.paper}>
-                {/* <Button variant="contained" color="primary" onClick={handleReject} value={call.sessionId} className={classes.reject}>Reject</Button> */}
+              <div>
+                {/* <Button */}
+                {/*  variant="contained" */}
+                {/*  color="primary" */}
+                {/*  onClick={handleReject} */}
+                {/*  value={call.sessionId} */}
+                {/*  className={classes.reject}>Reject</Button> */}
                 <Fab
-                  size='small'
+                  size="small"
                   className={classes.endCallButton}
                   onClick={handleReject}
                   value={call.sessionId}
@@ -131,10 +135,16 @@ function CallQueue({ calls, handleAnswer, handleReject }) {
               </div>
             </Grid>
           </Paper>
-        )
+        );
       })}
     </div>
-  )
+  );
 }
 
-export default CallQueue
+CallQueue.propTypes = {
+  calls: PropTypes.any,
+  handleAnswer: PropTypes.any,
+  handleReject: PropTypes.any
+};
+
+export default CallQueue;

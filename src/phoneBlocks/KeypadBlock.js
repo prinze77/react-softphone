@@ -106,8 +106,9 @@ function KeypadBlock({
   activeChanel,
   keyVariant = 'default',
   handleHold,
-  asteriskAccounts,
-  transferListAccountsOpen
+  asteriskAccounts = [],
+  transferListAccountsOpen,
+  dialState
 }) {
   const classes = useStyles();
   const {
@@ -124,15 +125,20 @@ function KeypadBlock({
     transferControl
   } = activeChanel;
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const [accounts, setAccounts] = useState(asteriskAccounts);
+  const [accounts, setAccounts] = useState(asteriskAccounts || []);
+
   const [inputSearch, setInputSearch] = useState('');
   const open = Boolean(anchorEl);
   const id = transferListAccountsOpen ? 'simple-popover' : undefined;
   const handleClickTransferCall = (event) => {
+    if (dialState) {
+      handleCallTransfer();
+      return;
+    }
     setAnchorEl(event.currentTarget);
-    handleCallTransfer();
   };
   useEffect(() => {
+    // eslint-disable-next-line max-len
     const searchedAccounts = asteriskAccounts.filter((acc) => acc.label.toLowerCase().includes(inputSearch.toLowerCase()) || acc.accountId.includes(inputSearch));
     setAccounts(searchedAccounts);
   }, [asteriskAccounts, inputSearch]);
@@ -230,8 +236,12 @@ function KeypadBlock({
                         />
                       </ListItem>
                       <Divider />
-                      {accounts.map((account, key) => (
-                        <ListItem button key={key} onClick={() => handleCallTransfer(account.accountId)}>
+                      {accounts.map((account) => (
+                        <ListItem
+                          button
+                          key={account.id}
+                          onClick={() => handleCallTransfer(account.accountId)}
+                        >
                           <ListItemText primary={(
                             <span className={classes.flexBetween}>
                               {account.label}
@@ -370,7 +380,12 @@ function KeypadBlock({
                 <CallEnd />
               </Fab>
             )}
-            {/* <Fab className={classes.fab} size="small" aria-label="4" onClick={handleSettingsButton}> */}
+            {/* <Fab
+            className={classes.fab}
+            size="small"
+            aria-label="4"
+            onClick={handleSettingsButton}
+            > */}
             {/* <Settings /> */}
             {/* </Fab> */}
           </Grid>
@@ -542,6 +557,7 @@ KeypadBlock.propTypes = {
   keyVariant: PropTypes.any,
   handleHold: PropTypes.any,
   asteriskAccounts: PropTypes.any,
-  transferListAccountsOpen: PropTypes.any
+  transferListAccountsOpen: PropTypes.any,
+  dialState: PropTypes.any
 };
 export default KeypadBlock;
