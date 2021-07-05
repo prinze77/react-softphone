@@ -194,7 +194,7 @@ function SoftPhone({
   }
   const classes = useStyles()
   const [drawerOpen, drawerSetOpen] = useState(false)
-  const [dialState, setdialState] = useState('')
+  const [dialState, setDialState] = useState('')
   const [activeChannel, setActiveChannel] = useState(0)
   const [localStatePhone, setLocalStatePhone] = useState(defaultSoftPhoneState)
   const [notificationState, setNotificationState] = React.useState({ open: false, message: '' })
@@ -314,7 +314,7 @@ function SoftPhone({
           ...prevState,
           displayCalls: newProgressLocalStatePhone.displayCalls
         }))
-        setdialState('')
+        setDialState('')
 
         break
       case 'callEnded':
@@ -492,7 +492,7 @@ function SoftPhone({
   }
   const handleDialStateChange = (event) => {
     event.persist()
-    setdialState(event.target.value)
+    setDialState(event.target.value)
   }
   const handleConnectOnStart = (event, newValue) => {
     event.persist()
@@ -514,7 +514,7 @@ function SoftPhone({
   }
   const handlePressKey = (event) => {
     event.persist()
-    setdialState(dialState + event.currentTarget.value)
+    setDialState(dialState + event.currentTarget.value)
   }
   const handleCall = (event) => {
     event.persist()
@@ -545,16 +545,16 @@ function SoftPhone({
 
   const handleCallTransfer = (transferedNumber) => {
     if (!dialState && !transferedNumber) return
-    if (transferedNumber) setdialState(transferedNumber)
+    if (transferedNumber) setDialState(transferedNumber)
     const newCallTransferDisplayCalls = _.map(
       localStatePhone.displayCalls, (a) => (a.id === activeChannel ? {
         ...a,
-        transferNumber: dialState,
+        transferNumber: dialState || transferedNumber,
         inTransfer: true,
         allowAttendedTransfer: false,
         allowFinishTransfer: false,
         allowTransfer: false,
-        callInfo: 'Transfering...'
+        callInfo: 'Transferring...'
       } : a)
     )
     setLocalStatePhone((prevState) => ({
@@ -562,22 +562,22 @@ function SoftPhone({
       displayCalls: newCallTransferDisplayCalls
     }))
     flowRoute.activeCall.sendDTMF(`##${dialState}`)
-    setdialState('')
+    setDialState('')
   }
 
-  const handleCallAttendedTransfer = (event) => {
+  const handleCallAttendedTransfer = (event, number) => {
     switch (event) {
       case 'transfer':
         setLocalStatePhone((prevState) => ({
           ...prevState,
           displayCalls: _.map(localStatePhone.displayCalls, (a) => (a.id === activeChannel ? {
             ...a,
-            transferNumber: dialState,
+            transferNumber: dialState || number,
             allowAttendedTransfer: false,
             allowTransfer: false,
             transferControl: true,
             allowFinishTransfer: false,
-            callInfo: 'Attended Transfering...',
+            callInfo: 'Attended Transferring...',
             inTransfer: true
           } : a))
         }))
@@ -654,7 +654,11 @@ function SoftPhone({
     }
   },
   [config, localStatePhone.callVolume, localStatePhone.phoneConnectOnStart, localStatePhone.ringVolume])
-
+  const dialNumberOnEnter = (event) => {
+    if (event.key === 'Enter') {
+      handleCall(event)
+    }
+  }
   return (
     <Page
       className={classes.root}
@@ -722,6 +726,7 @@ function SoftPhone({
             id='standard-basic'
             label='Number'
             fullWidth
+            onKeyUp={(event) => dialNumberOnEnter(event)}
             onChange={handleDialStateChange}
           />
 
@@ -737,6 +742,8 @@ function SoftPhone({
             activeChanel={localStatePhone.displayCalls[activeChannel]}
             handleSettingsButton={handleSettingsButton}
             asteriskAccounts={asteriskAccounts}
+            dialState={dialState}
+            setDialState={setDialState}
           />
         </div>
 

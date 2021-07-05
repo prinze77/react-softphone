@@ -1,19 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react'
 import {
   Grid,
   Fab,
   FormControlLabel,
   Switch,
-  Tooltip,
-  Popover,
-  List,
-  ListItem,
-  ListItemText,
-  Divider,
-  Paper,
-  InputBase,
-  IconButton
-} from '@material-ui/core';
+  Tooltip
+} from '@material-ui/core'
 import {
   Mic,
   MicOff,
@@ -26,13 +18,12 @@ import {
   PhoneForwarded,
   Cancel,
   SwapCalls,
-  CallMerge,
-  Search
-} from '@material-ui/icons';
+  CallMerge
+} from '@material-ui/icons'
 
-import { makeStyles } from '@material-ui/core/styles';
-import PropTypes from 'prop-types';
-import OnlineIndicator from './OnlineIndicator';
+import { makeStyles } from '@material-ui/core/styles'
+import PropTypes from 'prop-types'
+import SearchList from './SearchList'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -94,7 +85,7 @@ const useStyles = makeStyles((theme) => ({
   iconButton: {
     padding: '0 10px'
   }
-}));
+}))
 
 function KeypadBlock({
   handleCallAttendedTransfer,
@@ -106,40 +97,46 @@ function KeypadBlock({
   activeChanel,
   keyVariant = 'default',
   handleHold,
-  asteriskAccounts,
-  transferListAccountsOpen
+  asteriskAccounts = [],
+  dialState,
+  setDialState
 }) {
-  const classes = useStyles();
+  const classes = useStyles()
   const {
     inCall,
     muted,
     hold,
     sessionId,
     inAnswer,
-    allowTransfer,
-    allowAttendedTransfer,
     inAnswerTransfer,
     inConference,
     inTransfer,
-    transferControl
-  } = activeChanel;
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [accounts, setAccounts] = useState(asteriskAccounts);
-  const [inputSearch, setInputSearch] = useState('');
-  const open = Boolean(anchorEl);
-  const id = transferListAccountsOpen ? 'simple-popover' : undefined;
+    transferControl,
+    allowTransfer,
+    allowAttendedTransfer
+  } = activeChanel
+  const [anchorElTransfer, setAnchorElTransfer] = React.useState(null)
+  const [anchorElAttended, setAnchorElAttended] = React.useState(null)
   const handleClickTransferCall = (event) => {
-    setAnchorEl(event.currentTarget);
-    handleCallTransfer();
-  };
-  useEffect(() => {
-    const searchedAccounts = asteriskAccounts.filter((acc) => acc.label.toLowerCase().includes(inputSearch.toLowerCase()) || acc.accountId.includes(inputSearch));
-    setAccounts(searchedAccounts);
-  }, [asteriskAccounts, inputSearch]);
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+    if (dialState) {
+      handleCallTransfer(dialState)
+      setDialState('')
+      return
+    }
+    setAnchorElTransfer(event.currentTarget)
+  }
+  const handleClickAttendedTransfer = (event) => {
+    if (dialState) {
+      handleCallAttendedTransfer('transfer', {})
+      setDialState('')
+      return
+    }
+    setAnchorElAttended(event.currentTarget)
+  }
+  const AttendedTransferListClick = (id) => {
+    handleCallAttendedTransfer('transfer', id)
+    setDialState('')
+  }
   return (
     <div>
       {keyVariant === 'default' ? (
@@ -147,17 +144,14 @@ function KeypadBlock({
           <Grid container spacing={0} className={classes.gridRaw}>
             <Grid item xs={3}>
               <Grid item xs={12}>
-                <Tooltip
-                  title={muted ? 'Unmute mic' : 'Mute mic'}
-                  aria-label="add"
-                >
+                <Tooltip title={muted ? 'Unmute mic' : 'Mute mic'} disableFocusListener disableTouchListener>
                   <div>
                     <Fab
                       disabled={!inCall}
                       value={inCall}
                       className={classes.fab}
-                      size="small"
-                      aria-label=""
+                      size='small'
+                      aria-label=''
                       onClick={handleMicMute}
                     >
                       {muted ? <MicOff /> : <Mic />}
@@ -167,184 +161,148 @@ function KeypadBlock({
               </Grid>
               <Grid hidden>
                 <FormControlLabel
-                  control={<Switch size="small" checked onChange={() => {}} />}
-                  label="Mute"
+                  control={<Switch size='small' checked onChange={() => {}} />}
+                  label='Mute'
                 />
               </Grid>
             </Grid>
             <Grid item xs={3}>
-              <Tooltip title={hold ? 'Resume' : 'Hold'} aria-label="add">
+              <Tooltip title={hold ? 'Resume' : 'Hold'} disableFocusListener disableTouchListener>
                 <div>
-                  {' '}
                   <Fab
                     disabled={!inCall || !inAnswer}
                     className={classes.fab}
-                    size="small"
-                    aria-label="4"
+                    size='small'
+                    aria-label='4'
                     onClick={() => {
-                      handleHold(sessionId, hold);
+                      handleHold(sessionId, hold)
                     }}
                   >
-                    {hold ? <Pause /> : <PlayArrow />}
+                    {hold ? <PlayArrow /> : <Pause />}
                   </Fab>
                 </div>
               </Tooltip>
             </Grid>
             <Grid item xs={3}>
-              <Tooltip title="Transfer Call" aria-label="add">
+              <Tooltip title='Transfer Call'>
                 <div>
                   <Fab
                     disabled={!inCall || !inAnswer || hold || !allowAttendedTransfer}
                     className={classes.fab}
-                    size="small"
-                    aria-label="4"
+                    size='small'
+                    aria-label='4'
                     onClick={handleClickTransferCall}
-                    aria-describedby={id}
+                    aria-describedby='transferredBox'
                   >
                     <PhoneForwarded />
                   </Fab>
-                  <Popover
-                    id={id}
-                    open={open}
-                    onClose={handleClose}
-                    anchorEl={anchorEl}
-                    anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-                    transformOrigin={{ vertical: 'top', horizontal: 'center' }}
-                  >
-                    <List component="nav" className={classes.list} aria-label="accounts">
-                      <ListItem>
-                        <ListItemText primary={(
-                          <Paper style={{ padding: '5px' }}>
-                            <InputBase
-                              className={classes.input}
-                              placeholder="Search"
-                              inputProps={{ 'aria-label': 'search' }}
-                              onChange={(event) => setInputSearch(event.target.value)}
-                              defaultValue={inputSearch}
-                            />
-                            <IconButton type="submit" className={classes.iconButton} aria-label="search">
-                              <Search />
-                            </IconButton>
-                          </Paper>
-                        )}
-                        />
-                      </ListItem>
-                      <Divider />
-                      {accounts.map((account, key) => (
-                        <ListItem button key={key} onClick={() => handleCallTransfer(account.accountId)}>
-                          <ListItemText primary={(
-                            <span className={classes.flexBetween}>
-                              {account.label}
-                              {' '}
-                              {account.accountId}
-                              {' '}
-                              <div className={classes.status}>
-                                <OnlineIndicator
-                                  size="small"
-                                  status={account.online === 'true' ? 'online' : 'busy'}
-                                />
-                              </div>
-                            </span>
-                          )}
-                          />
-                        </ListItem>
-                      ))}
-                    </List>
-                  </Popover>
                 </div>
               </Tooltip>
+              <SearchList
+                asteriskAccounts={asteriskAccounts}
+                onClickList={(id) => handleCallTransfer(id)}
+                ariaDescribedby='transferredBox'
+                anchorEl={anchorElTransfer}
+                setAnchorEl={setAnchorElTransfer}
+              />
             </Grid>
             <Grid item xs={3}>
-              <Tooltip title="Attended Transfer" aria-label="add">
-                <span>
+              <Tooltip title='Attended Transfer'>
+                <div>
                   <Fab
                     disabled={!inCall || !inAnswer || hold || !allowTransfer}
                     className={classes.fab}
-                    size="small"
-                    aria-label="4"
-                    onClick={() => {
-                      handleCallAttendedTransfer('transfer', {});
-                    }}
+                    size='small'
+                    aria-label='4'
+                    onClick={handleClickAttendedTransfer}
+                    aria-describedby='attendedBox'
                   >
                     <Transform />
                   </Fab>
-                </span>
+                </div>
               </Tooltip>
+              <SearchList
+                asteriskAccounts={asteriskAccounts}
+                onClickList={AttendedTransferListClick}
+                ariaDescribedby='attendedBox'
+                anchorEl={anchorElAttended}
+                setAnchorEl={setAnchorElAttended}
+              />
             </Grid>
-            {inAnswerTransfer
-            && !inConference
-            && inTransfer
-            && transferControl ? (
+            {inAnswerTransfer &&
+            !inConference &&
+            inTransfer &&
+            transferControl ? (
               <Grid container spacing={0} className={classes.gridRaw}>
-                <Grid item xs={3}>
-                  <Tooltip title="Conference" aria-label="conference">
-                    <span>
+                  <Grid item xs={3}>
+                  <Tooltip title='Conference' aria-label='conference'>
+                      <span>
                       <Fab
-                        disabled={false}
-                        className={classes.fab}
-                        size="small"
-                        aria-label="4"
-                        onClick={() => {
-                          handleCallAttendedTransfer('merge', {});
-                        }}
-                      >
-                        <CallMerge />
-                      </Fab>
+                          disabled={false}
+                          className={classes.fab}
+                          size='small'
+                          aria-label='4'
+                          onClick={() => {
+                            handleCallAttendedTransfer('merge', {})
+                          }}
+                        >
+                          <CallMerge />
+                        </Fab>
                     </span>
-                  </Tooltip>
+                    </Tooltip>
                 </Grid>
-                <Grid item xs={3}>
-                  <Tooltip title="Swap Caller" aria-label="swap-caller">
-                    <span>
+                  <Grid item xs={3}>
+                  <Tooltip title='Swap Caller' aria-label='swap-caller'>
+                      <span>
                       <Fab
-                        disabled={false}
-                        className={classes.fab}
-                        size="small"
-                        aria-label="4"
-                        onClick={() => {
-                          handleCallAttendedTransfer('swap', {});
-                        }}
-                      >
-                        <SwapCalls />
-                      </Fab>
+                          disabled={false}
+                          className={classes.fab}
+                          size='small'
+                          aria-label='4'
+                          onClick={() => {
+                            handleCallAttendedTransfer('swap', {})
+                          }}
+                        >
+                          <SwapCalls />
+                        </Fab>
                     </span>
-                  </Tooltip>
+                    </Tooltip>
                 </Grid>
-                <Grid item xs={3}>
-                  <Tooltip title="Pass Call" aria-label="pass-call">
-                    <span>
+                  <Grid item xs={3}>
+                  <Tooltip title='Pass Call' aria-label='pass-call'>
+                      <span>
                       <Fab
-                        disabled={false}
-                        className={classes.fab}
-                        size="small"
-                        aria-label="4"
-                        onClick={() => {
-                          handleCallAttendedTransfer('finish', {});
-                        }}
-                      >
-                        <PhoneForwarded />
-                      </Fab>
+                          disabled={false}
+                          className={classes.fab}
+                          size='small'
+                          aria-label='4'
+                          onClick={() => {
+                            handleCallAttendedTransfer('finish', {})
+                          }}
+                        >
+                          <PhoneForwarded />
+                        </Fab>
                     </span>
-                  </Tooltip>
+                    </Tooltip>
                 </Grid>
-                <Grid item xs={3}>
-                  <Tooltip title="Cancel Transfer" aria-label="cancel-transfer">
-                    <span>
+                  <Grid item xs={3}>
+                  <Tooltip title='Cancel Transfer' aria-label='cancel-transfer'>
+                      <span>
                       <Fab
-                        disabled={false}
-                        className={classes.fab}
-                        size="small"
-                        aria-label="4"
-                        onClick={() => {
-                          handleCallAttendedTransfer('cancel', {});
-                        }}
-                      >
-                        <Cancel />
-                      </Fab>
+                          disabled={false}
+                          className={classes.fab}
+                          size='small'
+                          aria-label='4'
+                          onClick={() => {
+                            handleCallAttendedTransfer('cancel', {})
+                          }}
+                        >
+                          <Cancel />
+                        </Fab>
                     </span>
-                  </Tooltip>
+                    </Tooltip>
                 </Grid>
-              </Grid>
+                </Grid>
               ) : (
                 <div />
               )}
@@ -354,23 +312,27 @@ function KeypadBlock({
             {inCall === false ? (
               <Fab
                 className={classes.callButton}
-                size="small"
-                aria-label="4"
+                size='small'
+                aria-label='4'
                 onClick={handleCall}
               >
                 <Call />
               </Fab>
             ) : (
               <Fab
-                size="small"
-                aria-label=""
+                size='small'
+                aria-label=''
                 className={classes.endCallButton}
                 onClick={handleEndCall}
               >
                 <CallEnd />
               </Fab>
             )}
-            {/* <Fab className={classes.fab} size="small" aria-label="4" onClick={handleSettingsButton}> */}
+            {/* <Fab */}
+            {/* className={classes.fab} */}
+            {/* size="small" */}
+            {/* aria-label="4" */}
+            {/* onClick={handleSettingsButton}> */}
             {/* <Settings /> */}
             {/* </Fab> */}
           </Grid>
@@ -380,8 +342,8 @@ function KeypadBlock({
           <Grid container spacing={0} className={classes.gridRaw}>
             <Fab
               className={classes.fab}
-              size="small"
-              aria-label="1"
+              size='small'
+              aria-label='1'
               value={1}
               onClick={handlePressKey}
             >
@@ -389,8 +351,8 @@ function KeypadBlock({
             </Fab>
             <Fab
               className={classes.fab}
-              size="small"
-              aria-label="2"
+              size='small'
+              aria-label='2'
               value={2}
               onClick={handlePressKey}
             >
@@ -398,22 +360,22 @@ function KeypadBlock({
             </Fab>
             <Fab
               className={classes.fab}
-              size="small"
-              aria-label="3"
+              size='small'
+              aria-label='3'
               value={3}
               onClick={handlePressKey}
             >
               3
             </Fab>
-            <Fab className={classes.fab} size="small" aria-label="4">
+            <Fab className={classes.fab} size='small' aria-label='4'>
               <Settings />
             </Fab>
           </Grid>
           <Grid container spacing={0} className={classes.gridRaw}>
             <Fab
               className={classes.fab}
-              size="small"
-              aria-label="4"
+              size='small'
+              aria-label='4'
               value={4}
               onClick={handlePressKey}
             >
@@ -421,8 +383,8 @@ function KeypadBlock({
             </Fab>
             <Fab
               className={classes.fab}
-              size="small"
-              aria-label="5"
+              size='small'
+              aria-label='5'
               value={5}
               onClick={handlePressKey}
             >
@@ -430,22 +392,22 @@ function KeypadBlock({
             </Fab>
             <Fab
               className={classes.fab}
-              size="small"
-              aria-label="6"
+              size='small'
+              aria-label='6'
               value={6}
               onClick={handlePressKey}
             >
               6
             </Fab>
-            <Fab className={classes.fab} size="small" aria-label="4">
+            <Fab className={classes.fab} size='small' aria-label='4'>
               <Pause />
             </Fab>
           </Grid>
           <Grid container spacing={0} className={classes.gridRaw}>
             <Fab
               className={classes.fab}
-              size="small"
-              aria-label="7"
+              size='small'
+              aria-label='7'
               value={7}
               onClick={handlePressKey}
             >
@@ -453,8 +415,8 @@ function KeypadBlock({
             </Fab>
             <Fab
               className={classes.fab}
-              size="small"
-              aria-label="8"
+              size='small'
+              aria-label='8'
               value={8}
               onClick={handlePressKey}
             >
@@ -462,31 +424,31 @@ function KeypadBlock({
             </Fab>
             <Fab
               className={classes.fab}
-              size="small"
-              aria-label="9"
+              size='small'
+              aria-label='9'
               value={9}
               onClick={handlePressKey}
             >
               9
             </Fab>
-            <Fab className={classes.fab} size="small" aria-label="4">
+            <Fab className={classes.fab} size='small' aria-label='4'>
               <Transform />
             </Fab>
           </Grid>
           <Grid container spacing={0} className={classes.gridRaw}>
             <Fab
               className={classes.fab}
-              size="small"
-              aria-label="*"
-              value="*"
+              size='small'
+              aria-label='*'
+              value='*'
               onClick={handlePressKey}
             >
               *
             </Fab>
             <Fab
               className={classes.fab}
-              size="small"
-              aria-label="0"
+              size='small'
+              aria-label='0'
               value={0}
               onClick={handlePressKey}
             >
@@ -494,14 +456,14 @@ function KeypadBlock({
             </Fab>
             <Fab
               className={classes.fab}
-              size="small"
-              aria-label="#"
-              value="#"
+              size='small'
+              aria-label='#'
+              value='#'
               onClick={handlePressKey}
             >
               #
             </Fab>
-            <Fab className={classes.fab} size="small" aria-label="">
+            <Fab className={classes.fab} size='small' aria-label=''>
               <Settings />
             </Fab>
           </Grid>
@@ -509,16 +471,16 @@ function KeypadBlock({
             {inCall === 0 ? (
               <Fab
                 className={classes.callButton}
-                size="small"
-                aria-label="4"
+                size='small'
+                aria-label='4'
                 onClick={handleCall}
               >
                 <Call />
               </Fab>
             ) : (
               <Fab
-                size="small"
-                aria-label=""
+                size='small'
+                aria-label=''
                 className={classes.endCallButton}
                 onClick={handleEndCall}
               >
@@ -529,7 +491,7 @@ function KeypadBlock({
         </div>
       )}
     </div>
-  );
+  )
 }
 KeypadBlock.propTypes = {
   handleCallAttendedTransfer: PropTypes.any,
@@ -542,6 +504,7 @@ KeypadBlock.propTypes = {
   keyVariant: PropTypes.any,
   handleHold: PropTypes.any,
   asteriskAccounts: PropTypes.any,
-  transferListAccountsOpen: PropTypes.any
-};
-export default KeypadBlock;
+  dialState: PropTypes.any,
+  setDialState: PropTypes.any
+}
+export default KeypadBlock
