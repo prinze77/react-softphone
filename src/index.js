@@ -544,6 +544,7 @@ function SoftPhone({
 
   const handleCallTransfer = (transferedNumber) => {
     if (!dialState && !transferedNumber) return
+    if (dialState.match(/^[0-9]+$/) == null) return
     const newCallTransferDisplayCalls = _.map(
       localStatePhone.displayCalls, (a) => (a.id === activeChannel ? {
         ...a,
@@ -565,6 +566,7 @@ function SoftPhone({
   const handleCallAttendedTransfer = (event, number) => {
     switch (event) {
       case 'transfer':
+        if (dialState.match(/^[0-9]+$/) == null) return
         setLocalStatePhone((prevState) => ({
           ...prevState,
           displayCalls: _.map(localStatePhone.displayCalls, (a) => (a.id === activeChannel ? {
