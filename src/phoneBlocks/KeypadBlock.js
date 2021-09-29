@@ -125,17 +125,23 @@ function KeypadBlock({
     }
     setAnchorElTransfer(event.currentTarget)
   }
+  const TransferListClick = (id) => {
+    if (id) {
+      handleCallTransfer(id)
+    }
+  }
   const handleClickAttendedTransfer = (event) => {
     if (dialState) {
       handleCallAttendedTransfer('transfer', {})
       setDialState('')
-      return
     }
     setAnchorElAttended(event.currentTarget)
   }
   const AttendedTransferListClick = (id) => {
-    handleCallAttendedTransfer('transfer', id)
-    setDialState('')
+    if (id) {
+      handleCallAttendedTransfer('transfer', id)
+      setDialState('')
+    }
   }
   return (
     <div>
@@ -200,7 +206,7 @@ function KeypadBlock({
               </Tooltip>
               <SearchList
                 asteriskAccounts={asteriskAccounts}
-                onClickList={(id) => handleCallTransfer(id)}
+                onClickList={(id) => TransferListClick(id)}
                 ariaDescribedby='transferredBox'
                 anchorEl={anchorElTransfer}
                 setAnchorEl={setAnchorElTransfer}

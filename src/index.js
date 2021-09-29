@@ -245,7 +245,6 @@ function SoftPhone({
   }
 
   flowRoute.onCallActionConnection = async (type, payload, data) => {
-    //  console.log(e);
     switch (type) {
       case 'reinvite':
         // looks like its Attended Transfer
@@ -545,7 +544,6 @@ function SoftPhone({
 
   const handleCallTransfer = (transferedNumber) => {
     if (!dialState && !transferedNumber) return
-    if (transferedNumber) setDialState(transferedNumber)
     const newCallTransferDisplayCalls = _.map(
       localStatePhone.displayCalls, (a) => (a.id === activeChannel ? {
         ...a,
@@ -554,15 +552,14 @@ function SoftPhone({
         allowAttendedTransfer: false,
         allowFinishTransfer: false,
         allowTransfer: false,
-        callInfo: 'Transferring...'
+        callInfo: 'Transfering...'
       } : a)
     )
     setLocalStatePhone((prevState) => ({
       ...prevState,
       displayCalls: newCallTransferDisplayCalls
     }))
-    flowRoute.activeCall.sendDTMF(`##${dialState}`)
-    setDialState('')
+    flowRoute.activeCall.sendDTMF(`##${dialState || transferedNumber}`)
   }
 
   const handleCallAttendedTransfer = (event, number) => {
@@ -581,7 +578,7 @@ function SoftPhone({
             inTransfer: true
           } : a))
         }))
-        flowRoute.activeCall.sendDTMF(`*2${dialState}`)
+        flowRoute.activeCall.sendDTMF(`*2${dialState || number}`)
         break
       case 'merge':
         const newCallMergeAttendedTransferDisplayCalls = _.map(
