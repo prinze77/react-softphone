@@ -118,7 +118,7 @@ function KeypadBlock({
   const [anchorElTransfer, setAnchorElTransfer] = React.useState(null)
   const [anchorElAttended, setAnchorElAttended] = React.useState(null)
   const handleClickTransferCall = (event) => {
-    if (dialState) {
+    if (dialState.match(/^[0-9]+$/) != null) {
       handleCallTransfer(dialState)
       setDialState('')
       return
@@ -131,7 +131,7 @@ function KeypadBlock({
     }
   }
   const handleClickAttendedTransfer = (event) => {
-    if (dialState) {
+    if (dialState.match(/^[0-9]+$/) != null) {
       handleCallAttendedTransfer('transfer', {})
       setDialState('')
     }
