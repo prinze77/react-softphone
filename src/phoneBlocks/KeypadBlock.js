@@ -134,6 +134,7 @@ function KeypadBlock({
     if (dialState.match(/^[0-9]+$/) != null) {
       handleCallAttendedTransfer('transfer', {})
       setDialState('')
+      return
     }
     setAnchorElAttended(event.currentTarget)
   }
