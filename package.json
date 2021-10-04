@@ -15,7 +15,8 @@
   ],
   "scripts": {
     "build": "rollup -c",
-    "release": "rollup -c && np"
+    "release": "rollup -c && np",
+    "test": ""
   },
   "repository": {
     "type": "git",
